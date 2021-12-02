@@ -1,4 +1,4 @@
-import { firestore } from 'firebase'
+import firestore from '@react-native-firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'

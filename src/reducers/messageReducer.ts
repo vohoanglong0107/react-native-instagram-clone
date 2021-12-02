@@ -13,7 +13,6 @@ export const messagesTypes = {
     IMAGE: 2,
     SUPER_IMAGE: 3,
     POST: 4,
-    ADDRESS: 5,
     EMOJI: 6,
     REPLY_STORY: 7,
 }
@@ -42,7 +41,6 @@ export type Message = {
     superImageId?: number,
     sourceUri?: string,
     postId?: number,
-    address_id?: string,
     width?: number,
     height?: number,
     ownEmoji?: number,
@@ -65,7 +63,6 @@ export type PostingMessage = {
     sourceUri?: string,
     width?: number,
     height?: number,
-    address_id?: string,
     ownEmoji?: number,
     yourEmoji?: number
     seen: 0,

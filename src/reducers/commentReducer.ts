@@ -1,5 +1,5 @@
 import { Alert } from 'react-native'
-import { firestore } from 'firebase'
+import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore'
 import { UserInfo } from './userReducer'
 import { ExtraPost } from './postReducer'
 export const LIMIT_COMMENTS_PER_LOADING = 10
@@ -25,7 +25,7 @@ export type Comment = {
     uid?: number,
     userId?: string,
     likes?: string[],
-    create_at?: firestore.Timestamp,
+    create_at?: FirebaseFirestoreTypes.Timestamp,
     replies?: ExtraComment[]
 }
 export type ExtraComment = Comment & {

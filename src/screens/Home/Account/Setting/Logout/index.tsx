@@ -1,22 +1,22 @@
-import React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import { goBack } from '../../../../../navigations/rootNavigation'
-import { APP_NAME } from '../../../../../constants'
-import { useDispatch } from 'react-redux'
-import { LogoutRequest } from '../../../../../actions/userActions'
+import React from 'react';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {goBack} from '../../../../../navigations/rootNavigation';
+import {APP_NAME} from '../../../../../constants';
+import {useDispatch} from 'react-redux';
+import {LogoutRequest} from '../../../../../actions/userActions';
 
 const Logout = () => {
-    const dispatch = useDispatch()
-    const _onLogout = () => {
-        goBack()
-        setTimeout(() => dispatch(LogoutRequest()), 100)
-    }
-    return (
-        <TouchableOpacity
-            activeOpacity={1}
-            onPress={goBack}
-            style={styles.container}>
-            <View style={styles.confirmBox}>
+  const dispatch = useDispatch();
+  const _onLogout = () => {
+    goBack();
+    setTimeout(() => dispatch(LogoutRequest()), 100);
+  };
+  return (
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={goBack}
+      style={styles.container}>
+      <View style={styles.confirmBox}>
                 <View style={{
                     height: 60,
                     justifyContent: 'center',
@@ -44,31 +44,31 @@ const Logout = () => {
                     }}>Cancel</Text>
                 </TouchableOpacity>
             </View>
-        </TouchableOpacity>
-    )
-}
+    </TouchableOpacity>
+  );
+};
 
-export default Logout
+export default Logout;
 
 const styles = StyleSheet.create({
-    container: {
-        height: '100%',
-        width: '100%',
-        backgroundColor: "rgba(0,0,0,0.3)",
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    confirmBox: {
-        width: '80%',
-        borderRadius: 10,
-        backgroundColor: "#fff",
-    },
-    btnConfirm: {
-        height: 44,
-        width: "100%",
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderTopColor: '#ddd',
-        borderTopWidth: 1
-    },
-})
+  container: {
+    height: '100%',
+    width: '100%',
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  confirmBox: {
+    width: '80%',
+    borderRadius: 10,
+    backgroundColor: '#fff',
+  },
+  btnConfirm: {
+    height: 44,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderTopColor: '#ddd',
+    borderTopWidth: 1,
+  },
+});

@@ -1,9 +1,10 @@
-import { firestore, database } from 'firebase';
+import firestore from '@react-native-firebase/firestore';
+import database from '@react-native-firebase/database';
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
-import { seenTypes, notificationActionTypes, ExtraNotification, Notification, NotificationAction, NotificationErrorAction, NotificationList, NotificationSuccessAction, notificationTypes, PostingNotification } from '../reducers/notificationReducer';
+import { seenTypes, notificationActionTypes, ExtraNotification, NotificationAction, NotificationErrorAction, NotificationList, NotificationSuccessAction, notificationTypes, PostingNotification } from '../reducers/notificationReducer';
 import { UserInfo } from '../reducers/userReducer';
 import { store } from "../store";
-import { Post, ExtraPost } from '../reducers/postReducer';
+import { ExtraPost } from '../reducers/postReducer';
 import { Comment } from '../reducers/commentReducer';
 import { convertToFirebaseDatabasePathName } from '../utils';
 

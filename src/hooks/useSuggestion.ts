@@ -1,7 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Keyboard, EmitterSubscription } from "react-native";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "../reducers";
-import { firestore } from "firebase";
+import firestore from "@react-native-firebase/firestore";
 import { store } from "../store";
 import { Post } from "../reducers/postReducer";
 import { MixedUserInfo } from "../screens/Home/Account/Follow";

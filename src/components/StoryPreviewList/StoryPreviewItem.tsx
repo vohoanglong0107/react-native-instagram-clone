@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Animated, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import { ExtraStory, seenTypes } from '../../reducers/storyReducer'
+import { ExtraStory } from '../../reducers/storyReducer'
 import FastImage from 'react-native-fast-image'
-import { firestore } from 'firebase'
+import firestore from '@react-native-firebase/firestore'
 import { navigate } from '../../navigations/rootNavigation'
 import { store } from '../../store'
 export interface StoryPreviewItemProps {

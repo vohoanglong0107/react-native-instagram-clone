@@ -1,6 +1,6 @@
-import { BottomTabBarOptions, BottomTabNavigationOptions, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { StyleSheet } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { TabBarComponent } from '../components/BottomTabBar'
@@ -19,7 +19,6 @@ import Activity from '../screens/Home/Activity'
 import Creator from '../screens/Home/Creator'
 import Explore from '../screens/Home/Explore'
 import CustomAccountIcon from '../components/CustomTabIcons/CustomAccountIcon'
-import Location from '../screens/Home/Explore/Location'
 import Hashtag from '../screens/Home/Explore/Hashtag'
 import ProfileX from '../screens/Home/Explore/ProfileX'
 import ProfileXFollow from '../screens/Home/Explore/ProfileXFollow'
@@ -30,9 +29,9 @@ import AddSavedCollection from '../screens/Home/Account/Setting/Account/AddSaved
 import EditSavedCollection from '../screens/Home/Account/Setting/Account/EditSavedCollection'
 import AddToSavedCollection from '../screens/Home/Account/Setting/Account/AddToSavedCollection'
 import CreateHighlight from '../screens/Home/Account/CreateHighlight'
-import ImageClass from '../screens/Home/Explore/ImageClass'
+import { useIsFocused } from '@react-navigation/native'
 export type HomeTabParamList = {
-    HomeIndex: undefined,
+    Home: undefined,
     Explore: undefined,
     Creator: undefined,
     Activity: undefined,
@@ -62,6 +61,7 @@ const AccountStack = () => {
             <Stack.Screen component={Archive} name="Archive" />
             <Stack.Screen component={AccountYouDontFollowBack} name="AccountYouDontFollowBack" />
             <Stack.Screen component={SettingNavigationx.AddAccount} name="AddAccount" />
+            <Stack.Screen component={SettingNavigationx.Logout} name="Logout" />
             {settingNavigationMap.map((settingNavigation, index) => (
                 <React.Fragment key={index}>
                     <Stack.Screen component={settingNavigation.component} name={settingNavigation.navigationName} />
@@ -104,12 +104,10 @@ const ExploreStack = () => {
             headerShown: false,
             gestureEnabled: false
         }}>
-            <Stack.Screen name="Explore" component={Explore} />
-            <Stack.Screen name="Location" component={Location} />
+            <Stack.Screen name="ExploreIndex" component={Explore} />
             <Stack.Screen name="Hashtag" component={Hashtag} />
             <Stack.Screen name="ProfileX" component={ProfileX} />
             <Stack.Screen name="ProfileXFollow" component={ProfileXFollow} />
-            <Stack.Screen name="ImageClass" component={ImageClass} />
         </Stack.Navigator>
     )
 }
@@ -133,22 +131,23 @@ const HomeStack = () => {
 }
 const Tab = createBottomTabNavigator<HomeTabParamList>()
 const HomeTab = () => {
-    const tabBarOptions: BottomTabBarOptions = {
-        showLabel: false,
-    }
-    const navigationOptions: BottomTabNavigationOptions = {
+    const focused = useIsFocused()
+    useEffect(() => {
+        console.log('HomeTab is focused', focused)
+    }, [])
 
-    }
     return (
-        <Tab.Navigator tabBar={TabBarComponent} tabBarOptions={tabBarOptions} screenOptions={navigationOptions}>
+        <Tab.Navigator tabBar={TabBarComponent} screenOptions={{headerShown: false}} >
             <Tab.Screen
                 options={{
                     tabBarIcon: ({ focused }) => <Icon name="home"
-                        size={30} color={focused ? '#000' : '#ddd'} />
-                }} component={HomeStack} name="HomeIndex" />
+                        size={30} color={focused ? '#000' : '#ddd'} />,
+                    tabBarShowLabel: false
+                }} component={HomeStack} name="Home" />
             <Tab.Screen options={{
                 tabBarIcon: ({ focused }) => <Icon name="magnify"
-                    size={30} color={focused ? '#000' : '#ddd'} />
+                    size={30} color={focused ? '#000' : '#ddd'} />,
+                    tabBarShowLabel: false
             }} component={ExploreStack} name="Explore" />
             <Tab.Screen
                 listeners={({ navigation, route }) => ({
@@ -159,13 +158,16 @@ const HomeTab = () => {
                 })}
                 options={{
                     tabBarIcon: ({ focused }) => <Icon name="plus-box"
-                        size={30} color={'#ddd'} />
+                        size={30} color={'#ddd'} />,
+                    tabBarShowLabel: false
                 }} component={Creator} name="Creator" />
             <Tab.Screen options={{
-                tabBarIcon: ({ focused }) => <CustomNotificationIcon focused={focused} />
+                tabBarIcon: ({ focused }) => <CustomNotificationIcon focused={focused} />,
+                tabBarShowLabel: false
             }} component={ActivityStack} name="Activity" />
             <Tab.Screen options={{
-                tabBarIcon: ({ focused }) => <CustomAccountIcon focused={focused} />
+                tabBarIcon: ({ focused }) => <CustomAccountIcon focused={focused} />,
+                tabBarShowLabel: false
             }} component={AccountStack} name="Account" />
         </Tab.Navigator>
     )

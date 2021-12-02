@@ -1,5 +1,5 @@
 import { RouteProp } from '@react-navigation/native'
-import { firestore } from 'firebase'
+import firestore from '@react-native-firebase/firestore'
 import React, { useEffect, useRef, useState } from 'react'
 import { Animated, FlatList, Keyboard, LayoutChangeEvent, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -13,7 +13,6 @@ import { messagesTypes, PostingMessage } from '../../reducers/messageReducer'
 import { ExtraPost } from '../../reducers/postReducer'
 import { ProfileX } from '../../reducers/profileXReducer'
 import { store } from '../../store'
-import { MapBoxAddress } from '../../utils'
 import { CreateMessageRequest, UndoMyLastMessageRequest } from '../../actions/messageActions'
 import { useSelector } from '../../reducers'
 type ShareToDirectRouteProp = RouteProp<SuperRootStackParamList, 'ShareToDirect'>
@@ -256,8 +255,7 @@ const ShareToDirect = ({ route }: ShareToDirectProps) => {
                         }} />
                         <View style={styles.messageInputWrapper}>
                             <FastImage style={styles.previewImage} source={{
-                                uri: type === 2 ? ((shareItem as ExtraPost).source || [])[0].uri
-                                    : (shareItem as MapBoxAddress).avatarURI
+                                uri: ((shareItem as ExtraPost).source || [])[0].uri
                             }} />
                             <TextInput
                                 onFocus={_onTxtInputFocus}
@@ -293,7 +291,6 @@ const ShareToDirect = ({ route }: ShareToDirectProps) => {
                                 ? suggestionlist : receiverList}
                             renderItem={({ item, index }) =>
                                 <ReceiverItem
-                                    type={type === 1 ? 'address' : 'post'}
                                     shareItem={shareItem}
                                     index={index}
                                     user={item} />
@@ -410,10 +407,9 @@ const styles = StyleSheet.create({
 interface ReceiverItemProps {
     user: ProfileX,
     index: number,
-    shareItem: MapBoxAddress | ExtraPost,
-    type: 'address' | 'post'
+    shareItem: ExtraPost,
 }
-const ReceiverItem = ({ user, index, shareItem, type }: ReceiverItemProps) => {
+const ReceiverItem = ({ user, index, shareItem }: ReceiverItemProps) => {
     const dispatch = useDispatch()
     const [sent, setSent] = useState<boolean>(false)
     const _onToggleSend = async () => {
@@ -423,11 +419,7 @@ const ReceiverItem = ({ user, index, shareItem, type }: ReceiverItemProps) => {
                 create_at: new Date().getTime(),
                 seen: 0,
             }
-            if (type === 'post') msg.postId = (shareItem as ExtraPost).uid
-            if (type === 'address') {
-                msg.type = messagesTypes.ADDRESS
-                msg.address_id = (shareItem as MapBoxAddress).id
-            }
+            msg.postId = (shareItem as ExtraPost).uid
             await dispatch(CreateMessageRequest(msg, `${user.username}`))
         } else {
             dispatch(UndoMyLastMessageRequest(`${user.username}`))

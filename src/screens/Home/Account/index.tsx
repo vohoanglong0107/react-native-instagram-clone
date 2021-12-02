@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Animated, Image, ImageBackground, TouchableWithoutFeedback, LayoutChangeEvent, NativeScrollEvent, NativeSyntheticEvent, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Animated, Image, ImageBackground, TouchableWithoutFeedback, LayoutChangeEvent, NativeScrollEvent, NativeSyntheticEvent, RefreshControl, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
 import FastImage from 'react-native-fast-image'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useDispatch } from 'react-redux'
@@ -750,7 +751,7 @@ const index = () => {
                             left: 0,
                             borderTopColor: '#ddd',
                             borderTopWidth: 0.3,
-                            bottom: getTabBarHeight() + STATUS_BAR_HEIGHT
+                            top: SCREEN_HEIGHT - getTabBarHeight() - STATUS_BAR_HEIGHT - styles.optionItem.height
                         }}>
                         <Icon name="cogs" size={30} color="#333" />
                         <Text style={{

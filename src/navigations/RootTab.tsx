@@ -1,4 +1,4 @@
-import { createMaterialTopTabNavigator, MaterialTopTabBarOptions, MaterialTopTabNavigationOptions } from '@react-navigation/material-top-tabs';
+import { createMaterialTopTabNavigator, MaterialTopTabNavigationOptions } from '@react-navigation/material-top-tabs';
 import React from 'react';
 import { useSelector } from '../reducers';
 import Direct from '../screens/Others/Direct';
@@ -16,13 +16,11 @@ const RootTab = createMaterialTopTabNavigator<rootStackParamList>()
 const index = (): JSX.Element => {
     const user = useSelector(state => state.user)
     const navigationOptions: MaterialTopTabNavigationOptions = {
-    }
-    const tabBarOptions: MaterialTopTabBarOptions = {
-        indicatorContainerStyle: {
+        tabBarIndicatorContainerStyle: {
             display: 'none'
         },
-        tabStyle: {
-            display: 'none'
+        tabBarStyle:{
+            display:"none"
         }
     }
     const logined = !!user?.user?.userInfo
@@ -30,15 +28,15 @@ const index = (): JSX.Element => {
         <RootTab.Navigator
             initialRouteName={logined ? 'HomeTab' : 'AuthStack'}
             screenOptions={navigationOptions}
-            tabBarOptions={tabBarOptions}>
+            backBehavior='history'>
             {!logined &&
                 <RootTab.Screen name="AuthStack" component={AuthStack} />
             }
             {logined &&
                 <>
-                    <RootTab.Screen name="StoryTaker" component={StoryTaker} />
-                    <RootTab.Screen name="HomeTab" component={HomeTab} />
                     <RootTab.Screen name="Direct" component={Direct} />
+                    <RootTab.Screen name="HomeTab" component={HomeTab} />
+                    <RootTab.Screen name="StoryTaker" component={StoryTaker} />
                 </>
             }
 

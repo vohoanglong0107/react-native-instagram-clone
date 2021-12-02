@@ -8,7 +8,7 @@ import Switcher from '../../../components/Switcher'
 import { SuperRootStackParamList } from '../../../navigations'
 import { goBack } from '../../../navigations/rootNavigation'
 import { useSelector } from '../../../reducers'
-import { firestore } from 'firebase'
+import firestore from '@react-native-firebase/firestore'
 import { store } from '../../../store'
 type NotificationOptionsRouteProp = RouteProp<SuperRootStackParamList, 'NotificationOptions'>
 

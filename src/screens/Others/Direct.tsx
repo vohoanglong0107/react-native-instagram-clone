@@ -1,5 +1,5 @@
 import { useIsFocused } from '@react-navigation/native'
-import { firestore } from 'firebase'
+import firestore from '@react-native-firebase/firestore'
 import React, { useEffect, useRef, useState } from 'react'
 import { FlatList, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View, TouchableHighlight, KeyboardAvoidingView, Image } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -30,6 +30,7 @@ const Direct = () => {
     })
     //Effect
     useEffect(() => {
+        console.log('Direct focused', focused)
         dispatch(TriggerMessageListenerRequest())
     }, [])
     useEffect(() => {

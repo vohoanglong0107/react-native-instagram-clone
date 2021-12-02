@@ -1,4 +1,4 @@
-import { database } from 'firebase'
+import database from '@react-native-firebase/database';
 import React, { useEffect } from 'react'
 import { Animated, StyleSheet, Text, View } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'

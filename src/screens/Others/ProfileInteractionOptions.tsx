@@ -6,11 +6,10 @@ import { PanGestureHandler, PanGestureHandlerGestureEvent, State } from 'react-n
 import { useDispatch } from 'react-redux'
 import { SuperRootStackParamList } from '../../navigations'
 import { goBack, navigate } from '../../navigations/rootNavigation'
-import { useSelector } from '../../reducers'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { UnfollowRequest, ToggleFollowUserRequest, UpdatePrivacySettingsRequest } from '../../actions/userActions'
 import { store } from '../../store'
-import { firestore } from 'firebase'
+import firestore from '@react-native-firebase/firestore'
 import { ProfileX } from '../../reducers/profileXReducer'
 type ProfileInteractionOptionsRouteProp = RouteProp<SuperRootStackParamList, 'ProfileInteractionOptions'>
 

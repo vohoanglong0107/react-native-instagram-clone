@@ -1,11 +1,11 @@
-import { firestore, storage } from "firebase"
+import firestore, {FirebaseFirestoreTypes} from "@react-native-firebase/firestore"
+import storage from "@react-native-firebase/storage"
 import { UserInfo } from "../reducers/userReducer"
 import { store } from "../store"
-import { MAPBOX_ACCESS_TOKEN, CLASSIFY_API } from "../constants"
-import Share, { Options } from "react-native-share"
+import Share, { ShareOptions } from "react-native-share"
 import { ExtraPost } from "../reducers/postReducer"
 import { ProfileX } from "../reducers/profileXReducer"
-import { StoryProcessedImage } from "../screens/Others/StoryProcessor"
+import { StoryProcessedImage, StoryProcessedImageInFireStore } from "../screens/Others/StoryProcessor"
 
 export const timestampToString = (create_at: number, suffix?: boolean): string => {
     let diffTime: string | number = (new Date().getTime() - (create_at || 0)) / 1000
@@ -25,7 +25,7 @@ export const timestampToString = (create_at: number, suffix?: boolean): string =
     }
     return diffTime
 }
-export const convertDateToTimeStampFireBase = (date: Date): firestore.Timestamp => {
+export const convertDateToTimeStampFireBase = (date: Date): FirebaseFirestoreTypes.Timestamp => {
     return new firestore.Timestamp(Math.floor(date.getTime() / 1000), date.getTime() - Math.floor(date.getTime() / 1000) * 1000)
 }
 export const generateUsernameKeywords = (fullText: string): string[] => {
@@ -64,38 +64,9 @@ export const uriToBlob = (uri: string) => {
         xhr.send(null);
     });
 }
-export type MapBoxAddress = {
-    id?: string,
-    place_name?: string,
-    keyword?: string[],
-    avatarURI?: string,
-    sources?: number[],
-    storySources?: number[],
-    center?: [number, number]
-}
-export const searchLocation = (query: string): Promise<MapBoxAddress[]> => {
-    return new Promise((resolve, reject) => {
-        fetch(`http://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURI(query.trim())}.json?access_token=${MAPBOX_ACCESS_TOKEN}`)
-            .then(res => res.json())
-            .then(data => {
-                const address: MapBoxAddress[] = []
-                const result: {
-                    features: MapBoxAddress[]
-                } = data
-                result.features.map(feature => {
-                    address.push({
-                        id: feature.id,
-                        place_name: feature.place_name,
-                        center: feature.center
-                    })
-                })
-                resolve(address)
-            })
-            .catch(err => reject(err))
-    })
-}
+
 export const sharePost = (post: ExtraPost) => {
-    const options: Options = {
+    const options: ShareOptions = {
         activityItemSources: [
             { // For sharing url with custom title.
                 placeholderItem: {
@@ -145,7 +116,7 @@ export const sharePost = (post: ExtraPost) => {
     Share.open(options)
 }
 export const shareProfile = (user: ProfileX) => {
-    const options: Options = {
+    const options: ShareOptions = {
         activityItemSources: [
             { // For sharing url with custom title.
                 placeholderItem: {
@@ -210,35 +181,21 @@ export const revertFirebaseDatabasePathName = (text: string) => {
         .replace(/\%/g, "$").replace(/\&/g, "[")
         .replace(/\*/g, "]")
 }
-export const uploadSuperImages = (images: StoryProcessedImage[]): Promise<{
+
+export const uploadSuperImages = (images: StoryProcessedImageInFireStore[]): Promise<{
     sourceId: number,
     hashtags: string[],
     mention: string[],
-    address: MapBoxAddress[]
 }>[] => {
     const ref = firestore()
     const myUsername = store.getState().user.user.userInfo?.username || ''
     return images.map(async (img, index) => {
         let uid = new Date().getTime() + index
-        img.texts = img.texts.map(txt => {
-            delete txt.animRatio
-            delete txt.animX
-            delete txt.animY
-            return txt
-        })
-        img.labels = img.labels.map(label => {
-            delete label.animRatio
-            delete label.animX
-            delete label.animY
-            return label
-        })
-        const blob = await uriToBlob(img.uri)
+        let storagePath = `story/${myUsername || 'others'}/${new Date().getTime() + Math.random()}.${img.extension.toLowerCase()}`
         const rq = await storage()
-            .ref(`story/${myUsername || 'others'}/${new Date().getTime() + Math.random()}.${img.extension.toLowerCase()}`)
-            .put(blob as Blob, {
-                contentType: `image/${img.extension.toLowerCase()}`
-            })
-        const downloadUri = await rq.ref.getDownloadURL()
+            .ref(storagePath)
+            .putFile(img.uri)
+        const downloadUri = await storage().ref(storagePath).getDownloadURL();
         ref.collection('superimages').doc(`${uid}`).set({
             ...img,
             uri: downloadUri,
@@ -251,27 +208,7 @@ export const uploadSuperImages = (images: StoryProcessedImage[]): Promise<{
                 .filter(x => x.type === 'hashtag').map(x => x.text))),
             mention: Array.from(new Set(img.labels
                 .filter(x => x.type === 'people').map(x => x.text.slice(1)))),
-            address: Array.from(new Set(img.labels
-                .filter(x => x.type === 'address').map(x => ({
-                    place_name: x.text,
-                    id: x.address_id
-                })))),
         }
-    })
-}
-export const getImageClass = (url: string): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const data = new FormData()
-        data.append('URL', url)
-        fetch(CLASSIFY_API, {
-            method: 'POST',
-            body: data
-        }).then(res => res.json())
-            .then(result => {
-                if (result.success) {
-                    resolve(result.class_name)
-                } else reject('Error')
-            })
     })
 }
 export function capitalizeFirstLetter(str: string) {

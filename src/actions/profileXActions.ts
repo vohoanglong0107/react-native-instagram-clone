@@ -1,4 +1,4 @@
-import { firestore } from 'firebase';
+import firestore from '@react-native-firebase/firestore';
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { store } from "../store";
 import { userXActionTypes, SuccessAction, ProfileX, userXAction, ErrorAction } from '../reducers/profileXReducer';

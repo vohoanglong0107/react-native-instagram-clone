@@ -1,4 +1,4 @@
-import { firestore } from 'firebase'
+import firestore from '@react-native-firebase/firestore'
 import React, { useEffect, useRef, useState } from 'react'
 import { Animated, Image, KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, TextInput, Alert } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -7,11 +7,11 @@ import { UpdateUserInfoRequest } from '../../../actions/userActions'
 import MaterialInput from '../../../components/MaterialInput'
 import NavigationBar from '../../../components/NavigationBar'
 import { SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT, DEFAULT_PHOTO_URI } from '../../../constants'
-import { goBack, navigate } from '../../../navigations/rootNavigation'
+import { goBack } from '../../../navigations/rootNavigation'
 import { store } from '../../../store'
 import Radio from '../../../components/Radio'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import Yup, { string } from 'yup'
+import { string } from 'yup'
 import { useSelector } from '../../../reducers'
 const EditProfile = () => {
     const dispatch = useDispatch()
@@ -204,14 +204,17 @@ const EditProfile = () => {
                                 fontWeight: '600'
                             }}>Change Profile Photo</Text>
                         </View>
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             onPress={() => navigate('GalleryChooser', { isChooseProfilePhoto: true })}
                             activeOpacity={0.9}
                             style={styles.changePhotoOptionItem}>
                             <Text style={{
                                 fontSize: 16,
                             }}>New Profile Photo</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
+                        {/* await dispatch(UploadAvatarRequest(uri, extension as string))
+                        navigate('Account') */}
+                        {/* FIXME: add image picker and image crop picker*/}
 
                         {user?.avatarURL !== DEFAULT_PHOTO_URI &&
                             <TouchableOpacity

@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
-import { firestore } from 'firebase'
+import firestore from '@react-native-firebase/firestore'
 import React, { useEffect, useRef, useState } from 'react'
 import { Animated, FlatList, Image, LayoutChangeEvent, NativeScrollEvent, NativeSyntheticEvent, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { PanGestureHandler, PanGestureHandlerGestureEvent, State } from 'react-native-gesture-handler'
@@ -174,9 +174,7 @@ export default function TagPeople({ navigation, route }: TagPeopleProps) {
         setSearchResult([])
         setQuery("")
     }
-    const _toggleShowDelBtn = (index: number,
-        preX: number,
-        preY: number,) => {
+    const _toggleShowDelBtn = (index: number) => {
         const imgs = [...images]
         const img = { ...imgs[ref.current.currentItem] }
         img.tags[index].showBtnDelete = !img.tags[index].showBtnDelete
@@ -401,9 +399,7 @@ export default function TagPeople({ navigation, route }: TagPeopleProps) {
                                         }
                                         <TouchableOpacity
                                             onPress={() =>
-                                                _toggleShowDelBtn(tagIndex,
-                                                    tag.x, tag.y,
-                                                )
+                                                _toggleShowDelBtn(tagIndex)
                                             }
                                         >
                                             <PanGestureHandler

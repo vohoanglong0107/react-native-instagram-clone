@@ -1,10 +1,8 @@
-import { firestore, database } from 'firebase';
+import firestore from '@react-native-firebase/firestore';
+import database from '@react-native-firebase/database';
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
-import { seenTypes, messagesActionTypes, ExtraMessage, Message, MessageAction, MessageErrorAction, MessageList, MessageSuccessAction, messagesTypes, PostingMessage, OnlineStatus } from '../reducers/messageReducer';
-import { UserInfo } from '../reducers/userReducer';
+import { seenTypes, messagesActionTypes, ExtraMessage, Message, MessageAction, MessageErrorAction, MessageList, MessageSuccessAction, PostingMessage, OnlineStatus } from '../reducers/messageReducer';
 import { store } from "../store";
-import { Post, ExtraPost } from '../reducers/postReducer';
-import { Comment } from '../reducers/commentReducer';
 import { convertToFirebaseDatabasePathName, revertFirebaseDatabasePathName } from '../utils';
 import { ProfileX } from '../reducers/profileXReducer';
 
@@ -35,10 +33,12 @@ export const TriggerMessageListenerRequest = ():
                                     ...m.val(),
                                     userId,
                                 })
+                                return undefined;
                             })
                         }
                         messageCollection.push(messages)
                     }
+                    return undefined;
                 })
                 //Listen Change 
                 userIds.map(userId => {
@@ -158,12 +158,8 @@ export const TriggerMessageListenerRequest = ():
                         })
                 })
 
-
-
-
-
-
                 const fetchMyMessagesTasks = userIds.map((userId, index) => {
+                    // <void> promise or not void
                     return new Promise((resolve, reject) => {
                         dbRef.ref(`/messages/${convertToFirebaseDatabasePathName(userId)}/${(myUsernamePath)}`)
                             .once('value', snap2 => {
@@ -174,6 +170,7 @@ export const TriggerMessageListenerRequest = ():
                                             ...m.val(),
                                             userId: myUsername
                                         })
+                                        return undefined
                                     })
                                 }
                                 messageCollection[index].sort((a, b) => b.create_at - a.create_at)
@@ -261,28 +258,6 @@ export const CreateMessageRequest = (message: PostingMessage, targetUsername: st
             }
             dbRef.ref(`/messages/${targetUsernamePath}/${myUsernamePath}/${uid}`)
                 .set(msg)
-            // const extraMsg = store.getState().messages.find(x => x.ownUser.username === targetUsername)
-            // if (extraMsg) {
-            //     const index = store.getState().messages.findIndex(x => x === extraMsg)
-            //     const newExtraMsg = { ...extraMsg }
-            //     newExtraMsg.messageList = [msg, ...newExtraMsg.messageList]
-            //     const newExtraList = [...store.getState().messages]
-            //     newExtraList[index] = newExtraMsg
-            //     dispatch(TriggerMessageListenerSuccess(newExtraList))
-            // } else {
-            //     const rq = await ref.collection('users').doc(`${targetUsername}`).get()
-            //     const targetUserData: ProfileX = rq.data() || {}
-            //     dbRef.ref(`/online/${targetUsernamePath}`).once('value', snap => {
-            //         const newExtraMsg: ExtraMessage = {
-            //             messageList: [msg],
-            //             ownUser: targetUserData,
-            //             online: snap.val()
-            //         }
-            //         const newExtraList = [...store.getState().messages]
-            //         newExtraList.push(newExtraMsg)
-            //         dispatch(TriggerMessageListenerSuccess(newExtraList))
-            //     })
-            // }
         } catch (e) {
             console.warn(e)
             dispatch(TriggerMessageListenerFailure())
@@ -427,6 +402,7 @@ export const UndoMyLastMessageRequest = (targetUsername: string):
                 const msgList: Message[] = []
                 snap.forEach(msg => {
                     msgList.push(msg.val())
+                    return undefined
                 })
                 const myLastMsg = msgList.pop()
                 if (myLastMsg) {

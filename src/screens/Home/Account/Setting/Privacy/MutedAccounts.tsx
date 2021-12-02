@@ -1,5 +1,5 @@
 import { useRoute } from '@react-navigation/native'
-import { firestore } from 'firebase'
+import firestore from '@react-native-firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { getTabBarHeight } from '../../../../../components/BottomTabBar'
