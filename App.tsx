@@ -15,7 +15,7 @@
  import RootStackNavigation from './src/navigations';
  import { persistor, store } from './src/store';
  import { convertToFirebaseDatabasePathName } from './src/utils';
- import database from '@react-native-firebase/database';
+ import { firebase } from '@react-native-firebase/database';
 
 const App = () => {
   const myUsername = store.getState().user.user?.userInfo?.username
@@ -28,7 +28,7 @@ const App = () => {
 			// limit functions quota
 			ref.current.itv = setInterval(() => {
 				if (AppState.currentState === 'active') {
-					database().ref(`/online/${convertToFirebaseDatabasePathName(myUsername)}`)
+					firebase.app().database('https://mobile-final-ed685-default-rtdb.asia-southeast1.firebasedatabase.app/').ref(`/online/${convertToFirebaseDatabasePathName(myUsername)}`)
 						.update({
 							last_online: new Date().getTime(),
 							status: 1
@@ -37,7 +37,6 @@ const App = () => {
 			}, 60000)
 		}
 	}, [])
-	// console.log("render")
 	return (
 		<Provider store={store}>
 			<PersistGate loading={null} persistor={persistor}>

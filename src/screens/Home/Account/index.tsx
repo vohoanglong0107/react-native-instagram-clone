@@ -495,7 +495,7 @@ const index = () => {
                                             <Text style={{
                                                 fontSize: 18,
                                                 fontWeight: "500"
-                                            }}>{extraInfo?.followers.length}</Text>
+                                            }}>{extraInfo?.followers ? extraInfo.followers.length: 0}</Text>
                                             <Text>Followers</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity

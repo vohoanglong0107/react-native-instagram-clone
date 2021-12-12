@@ -7,7 +7,7 @@ import { navigate } from "../navigations/rootNavigation";
 import { defaultUserState, ErrorAction, ExtraInfoPayload, NotificationProperties, NotificationSetting, PostStoryCommentOptions, PrivacyCommentOptions, PrivacyProperties, PrivacySetting, SuccessAction, userAction, userActionTypes, UserInfo, userPayload, UserSetting, HashTag, SearchItem, BookmarkCollection, Bookmark, StoryArchive, PostArchive, Highlight } from '../reducers/userReducer';
 import { WelcomePropsRouteParams } from '../screens/Auth/Welcome';
 import { store } from '../store';
-import { generateUsernameKeywords, uriToBlob, Timestamp } from '../utils';
+import { generateUsernameKeywords, Timestamp } from '../utils';
 import { Alert } from 'react-native';
 import { CreateNotificationRequest } from './notificationActions';
 import { notificationTypes } from '../reducers/notificationReducer';

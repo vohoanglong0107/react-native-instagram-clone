@@ -1,5 +1,7 @@
 import { createMaterialTopTabNavigator, MaterialTopTabNavigationOptions } from '@react-navigation/material-top-tabs';
 import React from 'react';
+import { View } from 'react-native';
+import { Text } from 'react-native-svg';
 import { useSelector } from '../reducers';
 import Direct from '../screens/Others/Direct';
 import StoryTaker from '../screens/Others/StoryTaker';
@@ -34,8 +36,8 @@ const index = (): JSX.Element => {
             }
             {logined &&
                 <>
-                    <RootTab.Screen name="Direct" component={Direct} />
                     <RootTab.Screen name="HomeTab" component={HomeTab} />
+                    <RootTab.Screen name="Direct" component={Direct} />
                     <RootTab.Screen name="StoryTaker" component={StoryTaker} />
                 </>
             }

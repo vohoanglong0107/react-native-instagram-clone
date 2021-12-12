@@ -50,20 +50,6 @@ export const findUsersByName = async (q: string) => {
     users = users.filter(u => u.username !== store.getState().user.user.userInfo?.username)
     return users
 }
-export const uriToBlob = (uri: string) => {
-    return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = function () {
-            resolve(xhr.response);
-        };
-        xhr.onerror = function () {
-            reject(new Error('uriToBlob failed'));
-        };
-        xhr.responseType = 'blob';
-        xhr.open('GET', uri, true);
-        xhr.send(null);
-    });
-}
 
 export const sharePost = (post: ExtraPost) => {
     const options: ShareOptions = {

@@ -1,5 +1,5 @@
 import firestore from '@react-native-firebase/firestore';
-import database from '@react-native-firebase/database';
+import {firebase} from '@react-native-firebase/database';
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { seenTypes, notificationActionTypes, ExtraNotification, NotificationAction, NotificationErrorAction, NotificationList, NotificationSuccessAction, notificationTypes, PostingNotification } from '../reducers/notificationReducer';
 import { UserInfo } from '../reducers/userReducer';
@@ -84,7 +84,7 @@ export const CreateNotificationRequest = (notification: PostingNotification):
     ThunkAction<Promise<void>, {}, {}, NotificationAction> => {
     return async (dispatch: ThunkDispatch<{}, {}, NotificationAction>) => {
         try {
-            const dbRef = database()
+            const dbRef = firebase.app().database('https://mobile-final-ed685-default-rtdb.asia-southeast1.firebasedatabase.app/')
             const ref = firestore()
             const uid = new Date().getTime()
             const postNotification = { ...notification }

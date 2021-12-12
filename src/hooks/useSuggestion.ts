@@ -130,19 +130,16 @@ export function useSuggestion(limit?: number): [ExtraSuggestionUserInfo[],
                     .map(usr => asyncFetchUser(usr, 4))
 
             Promise.all(followedByInteractionTasks).then(result2 => {
-                const followerOfFollowingUsernameTasks: Promise<string>[]
+                const followerOfFollowingUsernameTasks: Promise<string[]>[]
                     = follwingUsrnames.map(async userX => {
                         const rq = await ref.collection('users').doc(userX).get()
                         const userData: UserInfo = rq.data() || {}
                         const userFollowings = (userData.followings || [])
-                        if (userFollowings.length > 0) {
-                            let randomPickusername = userFollowings[
-                                Math.floor(Math.random()
-                                    * userFollowings.length)]
-                            return randomPickusername
-                        } else return ''
+                        return userFollowings
                     })
-                Promise.all(followerOfFollowingUsernameTasks).then(resultTemp => {
+                Promise.all(followerOfFollowingUsernameTasks)
+                .then(listname => listname.flat())
+                .then(resultTemp => {
                     let followedByFollwers = Array.from(new Set(resultTemp))
                         .filter(usr => usr !== myUsername
                             && usr !== ''

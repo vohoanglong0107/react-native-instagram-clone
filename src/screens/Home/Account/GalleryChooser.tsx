@@ -18,7 +18,7 @@ import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../../../constants';
 import {SuperRootStackParamList} from '../../../navigations';
 import {goBack} from '../../../navigations/rootNavigation';
 import Switcher from '../../../components/Switcher';
-import {uriToBlob, Timestamp} from '../../../utils';
+import {Timestamp} from '../../../utils';
 import {Post, PostImage} from '../../../reducers/postReducer';
 import storage from '@react-native-firebase/storage';
 import {store} from '../../../store';
@@ -90,7 +90,6 @@ const GalleryChooser = ({navigation, route}: GalleryChooserProps) => {
           };
         });
         setProcessedImages([...tasks]);
-        console.log(tasks);
       }
     }
     getPhotos();
@@ -166,7 +165,6 @@ const GalleryChooser = ({navigation, route}: GalleryChooserProps) => {
   const _onTagChange = React.useCallback((images: ProcessedImage[]) => {
     setProcessedImages(images);
   }, []);
-  console.log(processedImages);
   return (
     <SafeAreaView style={styles.container}>
       {writeAltText && (

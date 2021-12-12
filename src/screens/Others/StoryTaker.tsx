@@ -43,7 +43,6 @@ const StoryTaker = ({route}: StoryTakerProps) => {
   };
 
   useEffect(() => {
-    console.log('StoryTaker focused', focused);
     const requestCameraPermission = async () => {
       try {
         const granted = await PermissionsAndroid.request(

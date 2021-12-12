@@ -93,42 +93,42 @@ export type StoryProcessedImage = {
   labels: StoryLabel[];
 };
 type StoryTextInFireStore = {
-    text: string,
-    x: number,
-    y: number,
-    fontSize: number,
-    width: number,
-    height: number,
-    textBg: boolean,
-    textAlign: 'flex-start' | 'center' | 'flex-end',
-    color: string,
-    ratio: number,
-    zIndex: number,
-}
+  text: string;
+  x: number;
+  y: number;
+  fontSize: number;
+  width: number;
+  height: number;
+  textBg: boolean;
+  textAlign: 'flex-start' | 'center' | 'flex-end';
+  color: string;
+  ratio: number;
+  zIndex: number;
+};
 type StoryLabelInFireStore = {
-    type: 'people' | 'hashtag' | 'emoji',
-    text: string,
-    x: number,
-    y: number,
-    fontSize: number,
-    width: number,
-    height: number,
-    ratio: number,
-    zIndex: number,
-}
+  type: 'people' | 'hashtag' | 'emoji';
+  text: string;
+  x: number;
+  y: number;
+  fontSize: number;
+  width: number;
+  height: number;
+  ratio: number;
+  zIndex: number;
+};
 export type StoryProcessedImageInFireStore = {
-    uri: string,
-    extension: string,
-    width: number,
-    height: number,
-    base64: string,
-    ratio: number,
-    translateX: number,
-    translateY: number,
-    rotateDeg: number,
-    texts: StoryTextInFireStore[],
-    labels: StoryLabelInFireStore[]
-}
+  uri: string;
+  extension: string;
+  width: number;
+  height: number;
+  base64: string;
+  ratio: number;
+  translateX: number;
+  translateY: number;
+  rotateDeg: number;
+  texts: StoryTextInFireStore[];
+  labels: StoryLabelInFireStore[];
+};
 const textColors = [
   '#000',
   '#fff',
@@ -727,11 +727,15 @@ const StoryProcessor = ({route}: StoryProcessorProps) => {
   const _onNext = async () => {
     if (sendToDirect && username) {
       const superImagesList = await Promise.all(
-        uploadSuperImages(ref.current.processImages.map(img => ({
+        uploadSuperImages(
+          ref.current.processImages.map(img => ({
             ...img,
             texts: img.texts.map(({animRatio, animX, animY, ...rest}) => rest),
-            labels: img.labels.map(({animRatio, animX, animY, ...rest}) => rest)
-        }))),
+            labels: img.labels.map(
+              ({animRatio, animX, animY, ...rest}) => rest,
+            ),
+          })),
+        ),
       );
       const messages: PostingMessage[] = superImagesList.map(
         (source, index) => ({
@@ -746,18 +750,25 @@ const StoryProcessor = ({route}: StoryProcessorProps) => {
       navigate('Conversation', {
         username,
       });
-    } else
+    } else {
       navigate('PreUploadSuperImage', {
-        images: ref.current.processImages.map(image => {}),
+        images: ref.current.processImages.map(img => ({
+          ...img,
+          texts: img.texts.map(({animRatio, animX, animY, ...rest}) => rest),
+          labels: img.labels.map(({animRatio, animX, animY, ...rest}) => rest),
+        })),
       });
+    }
   };
   const _onFastUpload = async () => {
     const superImagesList = await Promise.all(
-        uploadSuperImages(ref.current.processImages.map(img => ({
-            ...img,
-            texts: img.texts.map(({animRatio, animX, animY, ...rest}) => rest),
-            labels: img.labels.map(({animRatio, animX, animY, ...rest}) => rest)
-        }))),
+      uploadSuperImages(
+        ref.current.processImages.map(img => ({
+          ...img,
+          texts: img.texts.map(({animRatio, animX, animY, ...rest}) => rest),
+          labels: img.labels.map(({animRatio, animX, animY, ...rest}) => rest),
+        })),
+      ),
     );
     const storyImages: Story[] = superImagesList.map(source => ({
       permission: storyPermissions.ALL,

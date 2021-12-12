@@ -1,5 +1,5 @@
 import firestore from '@react-native-firebase/firestore';
-import database from '@react-native-firebase/database';
+import { firebase } from '@react-native-firebase/database';
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { seenTypes, messagesActionTypes, ExtraMessage, Message, MessageAction, MessageErrorAction, MessageList, MessageSuccessAction, PostingMessage, OnlineStatus } from '../reducers/messageReducer';
 import { store } from "../store";
@@ -11,12 +11,11 @@ export const TriggerMessageListenerRequest = ():
     ThunkAction<Promise<void>, {}, {}, MessageAction> => {
     return async (dispatch: ThunkDispatch<{}, {}, MessageAction>) => {
         try {
-            const dbRef = database()
+            const dbRef = firebase.app().database('https://mobile-final-ed685-default-rtdb.asia-southeast1.firebasedatabase.app/')
             const ref = firestore()
             const myUsername = store.getState().user.user.userInfo?.username || ''
             const myUsernamePath = convertToFirebaseDatabasePathName(
                 myUsername)
-
             dbRef.ref(`/messages/${(myUsernamePath)}/`).once('value', async snap => {
                 const messageCollection: Message[][] = []
                 const userIds: string[] = []
@@ -43,12 +42,13 @@ export const TriggerMessageListenerRequest = ():
                 //Listen Change 
                 userIds.map(userId => {
                     //refresh listener
-                    dbRef.ref(`/messages/${(myUsernamePath)}/${convertToFirebaseDatabasePathName(userId)}`).off('child_added')
-                    dbRef.ref(`/messages/${(myUsernamePath)}/${convertToFirebaseDatabasePathName(userId)}`).off('child_changed')
-                    dbRef.ref(`/messages/${convertToFirebaseDatabasePathName(userId)}/${(myUsernamePath)}`).off('child_added')
-                    dbRef.ref(`/messages/${convertToFirebaseDatabasePathName(userId)}/${(myUsernamePath)}`).off('child_changed')
+                    const myUserIDPath = convertToFirebaseDatabasePathName(userId)
+                    dbRef.ref(`/messages/${(myUsernamePath)}/${myUserIDPath}`).off('child_added')
+                    dbRef.ref(`/messages/${(myUsernamePath)}/${myUserIDPath}`).off('child_changed')
+                    dbRef.ref(`/messages/${myUserIDPath}/${(myUsernamePath)}`).off('child_added')
+                    dbRef.ref(`/messages/${myUserIDPath}/${(myUsernamePath)}`).off('child_changed')
 
-                    dbRef.ref(`/messages/${(myUsernamePath)}/${convertToFirebaseDatabasePathName(userId)}`)
+                    dbRef.ref(`/messages/${(myUsernamePath)}/${myUserIDPath}`)
                         .on('child_changed', async snap => {
                             const child: Message = snap.val()
                             const uid = child.uid
@@ -68,7 +68,7 @@ export const TriggerMessageListenerRequest = ():
                                 }
                             }
                         })
-                    dbRef.ref(`/messages/${convertToFirebaseDatabasePathName(userId)}/${(myUsernamePath)}`)
+                    dbRef.ref(`/messages/${myUserIDPath}/${(myUsernamePath)}`)
                         .on('child_changed', async snap => {
                             const child: Message = snap.val()
                             const uid = child.uid
@@ -88,7 +88,7 @@ export const TriggerMessageListenerRequest = ():
                                 }
                             }
                         })
-                    dbRef.ref(`/messages/${(myUsernamePath)}/${convertToFirebaseDatabasePathName(userId)}`)
+                    dbRef.ref(`/messages/${(myUsernamePath)}/${myUserIDPath}`)
                         .on('child_added', async snap => {
                             if (allowListenChildAdd) {
                                 const child: Message = snap.val()
@@ -122,7 +122,7 @@ export const TriggerMessageListenerRequest = ():
                                 dispatch(TriggerMessageListenerSuccess(extraMsgList))
                             }
                         })
-                    dbRef.ref(`/messages/${convertToFirebaseDatabasePathName(userId)}/${(myUsernamePath)}`)
+                    dbRef.ref(`/messages/${myUserIDPath}/${(myUsernamePath)}`)
                         .on('child_added', async snap => {
                             if (allowListenChildAdd) {
                                 const child: Message = snap.val()
@@ -248,7 +248,7 @@ export const CreateMessageRequest = (message: PostingMessage, targetUsername: st
             const myUsername = store.getState().user.user.userInfo?.username || ''
             const myUsernamePath = convertToFirebaseDatabasePathName(
                 myUsername)
-            const dbRef = database()
+            const dbRef = firebase.app().database('https://mobile-final-ed685-default-rtdb.asia-southeast1.firebasedatabase.app/')
             const ref = firestore()
             const uid = message.uid || new Date().getTime()
             const msg = {
@@ -272,7 +272,7 @@ export const MakeSeenRequest = (targetUsername: string, msgUid: number):
             const myUsername = store.getState().user.user.userInfo?.username || ''
             const myUsernamePath = convertToFirebaseDatabasePathName(
                 myUsername)
-            const dbRef = database()
+            const dbRef = firebase.app().database('https://mobile-final-ed685-default-rtdb.asia-southeast1.firebasedatabase.app/')
             dbRef.ref(`/messages/${myUsernamePath}/${targetUsernamePath}/${msgUid}`)
                 .update({
                     seen: seenTypes.SEEN
@@ -300,7 +300,7 @@ export const CreateEmptyConversationRequest = (targetUsername: string):
             const myUsername = store.getState().user.user.userInfo?.username || ''
             const myUsernamePath = convertToFirebaseDatabasePathName(
                 myUsername)
-            const dbRef = database()
+            const dbRef = firebase.app().database('https://mobile-final-ed685-default-rtdb.asia-southeast1.firebasedatabase.app/')
             const ref = firestore()
             const rq = await ref.collection('users').doc(`${targetUsername}`).get()
             if (rq.exists) {
@@ -337,7 +337,7 @@ export const AddEmoijToMessageRequest = (targetUsername: string, msgId: number, 
             const myUsername = store.getState().user.user.userInfo?.username || ''
             const myUsernamePath = convertToFirebaseDatabasePathName(
                 myUsername)
-            const dbRef = database()
+            const dbRef = firebase.app().database('https://mobile-final-ed685-default-rtdb.asia-southeast1.firebasedatabase.app/')
             const extraMsgIndex = store.getState().messages.findIndex(x => x.ownUser.username === targetUsername)
             if (extraMsgIndex > -1) {
                 const extraMsg = store.getState().messages[extraMsgIndex]
@@ -368,7 +368,7 @@ export const RemoveEmoijToMessageRequest = (targetUsername: string, msgId: numbe
             const myUsername = store.getState().user.user.userInfo?.username || ''
             const myUsernamePath = convertToFirebaseDatabasePathName(
                 myUsername)
-            const dbRef = database()
+            const dbRef = firebase.app().database('https://mobile-final-ed685-default-rtdb.asia-southeast1.firebasedatabase.app/')
             const extraMsgIndex = store.getState().messages.findIndex(x => x.ownUser.username === targetUsername)
             if (extraMsgIndex > -1) {
                 const extraMsg = store.getState().messages[extraMsgIndex]
@@ -397,7 +397,7 @@ export const UndoMyLastMessageRequest = (targetUsername: string):
             const myUsername = store.getState().user.user.userInfo?.username || ''
             const myUsernamePath = convertToFirebaseDatabasePathName(
                 myUsername)
-            const dbRef = database()
+            const dbRef = firebase.app().database('https://mobile-final-ed685-default-rtdb.asia-southeast1.firebasedatabase.app/')
             dbRef.ref(`/messages/${targetUsernamePath}/${myUsernamePath}`).once('value', snap => {
                 const msgList: Message[] = []
                 snap.forEach(msg => {

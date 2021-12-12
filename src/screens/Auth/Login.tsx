@@ -315,12 +315,14 @@ function getEventHandlers(
         let email = ''
         await yup.string().required().email().validate(username).then(async re => {
             email = username;
-            console.log(email);
         }).catch(async err => {
             const result = await firestore().collection('users')
                 .where('username', '==', username).get()
             if (result.docs.length > 0) {
                 email = result.docs[0].data().email
+            }
+            else {
+                email = username + '@gmail.com'
             }
         })
         const loginData: userLoginWithEmail = {

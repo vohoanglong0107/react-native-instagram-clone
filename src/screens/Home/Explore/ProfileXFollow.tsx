@@ -118,7 +118,7 @@ const FollowTab = ({ userX, type }: { userX: ProfileX, type: 1 | 2 }) => {
                     textTransform: 'capitalize'
                 },
                 tabBarStyle: {
-                    width: SCREEN_WIDTH / 3.5
+                    width: SCREEN_WIDTH
                 },
                 tabBarBounces: false,
                 tabBarScrollEnabled: true,

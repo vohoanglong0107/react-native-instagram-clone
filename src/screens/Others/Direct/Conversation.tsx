@@ -15,7 +15,7 @@ import {
 import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch} from 'react-redux';
-import {launchImageLibrary} from 'react-native-image-picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {
   AddEmoijToMessageRequest,
   CreateEmptyConversationRequest,
@@ -62,7 +62,6 @@ const Conversation = ({route}: ConversationProps) => {
   const [typing, setTyping] = useState<boolean>(false);
   const [text, setText] = useState<string>('');
   const _flatlistRef = useRef<FlatList>(null);
-  const _galleryAnim = React.useMemo(() => new Animated.Value(0), []);
   const _emojiBarAnimX = React.useMemo(() => new Animated.Value(0), []);
   const _emojiBarAnimY = React.useMemo(() => new Animated.Value(0), []);
   const _emojiBarAnimRatio = React.useMemo(() => new Animated.Value(0), []);
@@ -70,7 +69,6 @@ const Conversation = ({route}: ConversationProps) => {
   const _emojiPointAnimOpacity = React.useMemo(() => new Animated.Value(0), []);
   const [selectedEmoijTargetIndex, setSelectedEmoijTargetIndex] =
     useState<number>(-1);
-  const [showGallery, setShowGallery] = useState<boolean>(false);
   const ref = useRef<{
     scrollTimeOut: NodeJS.Timeout;
     text: string;
@@ -114,23 +112,22 @@ const Conversation = ({route}: ConversationProps) => {
       setText('');
     }
   };
-  const _onHideGallery = () => {
-    setText(ref.current.text);
-    Animated.spring(_galleryAnim, {
-      toValue: 0,
-      useNativeDriver: true,
-    }).start();
-    setShowGallery(false);
-  };
+
   const _onMsgInputFocus = () => {
     setTyping(true);
   };
-  const _onUploadImage = async () => {
-    const res = await launchImageLibrary({
-      mediaType: 'photo',
-      selectionLimit: 0,
-    });
-    if (!!res.didCancel) {
+  const _onUploadImage = async (type: 'photo' | 'camera') => {
+    let res;
+    if (type === 'photo') {
+      res = await launchImageLibrary({
+        mediaType: 'photo',
+      });
+    } else {
+      res = await launchCamera({
+        mediaType: 'photo',
+      });
+    }
+    if (!res.didCancel) {
       const timestamp = new Date().getTime();
       res.assets!.forEach(async (photo, index) => {
         const extension = photo.fileName!.split('.').pop()?.toLocaleLowerCase();
@@ -140,13 +137,13 @@ const Conversation = ({route}: ConversationProps) => {
         const rq = await storage().ref(storagePath).putFile(photo.uri!);
         const downloadUri = await storage().ref(storagePath).getDownloadURL();
         const message: PostingMessage = {
-            uid: timestamp + index,
-            create_at: timestamp,
-            type: messagesTypes.IMAGE,
-            sourceUri: downloadUri,
-            seen: 0,
-            width: photo.width,
-            height: photo.height,
+          uid: timestamp + index,
+          create_at: timestamp,
+          type: messagesTypes.IMAGE,
+          sourceUri: downloadUri,
+          seen: 0,
+          width: photo.width,
+          height: photo.height,
         };
         dispatch(CreateMessageRequest(message, targetUsername));
       });
@@ -228,7 +225,16 @@ const Conversation = ({route}: ConversationProps) => {
       ref.current.preventNextScrollToEnd = false;
     }
   };
-  if (!!!conversation || !!!conversation.online)
+  const checkOnline = () => {
+    return (
+      conversation &&
+      conversation.online &&
+      conversation.online.status === onlineTypes.ACTIVE &&
+      conversation.online.last_online > new Date().getTime() - 1000 * 60 * 5
+    );
+  };
+
+  if (!!!conversation)
     return (
       <View
         style={{
@@ -343,9 +349,7 @@ const Conversation = ({route}: ConversationProps) => {
                   uri: conversation.ownUser.avatarURL,
                 }}
               />
-              {conversation.online.status === onlineTypes.ACTIVE && (
-                <View style={styles.onlinePoint} />
-              )}
+              {checkOnline() && <View style={styles.onlinePoint} />}
             </View>
             <View
               style={{
@@ -357,13 +361,16 @@ const Conversation = ({route}: ConversationProps) => {
                 }}>
                 {conversation.ownUser.fullname}
               </Text>
-              {conversation.online.status === onlineTypes.ACTIVE ? (
+              {checkOnline() ? (
                 <Text style={styles.onlineText}>Active now</Text>
               ) : (
-                <Text style={styles.onlineText}>
-                  Active {timestampToString(conversation.online.last_online)}{' '}
-                  ago
-                </Text>
+                conversation &&
+                conversation.online && (
+                  <Text style={styles.onlineText}>
+                    Active {timestampToString(conversation.online.last_online)}{' '}
+                    ago
+                  </Text>
+                )
               )}
             </View>
           </TouchableOpacity>
@@ -399,23 +406,7 @@ const Conversation = ({route}: ConversationProps) => {
         <Animated.View
           style={{
             ...styles.inboxContainer,
-            height: showGallery
-              ? SCREEN_HEIGHT - STATUS_BAR_HEIGHT - MAX_GALLERY_HEIGHT
-              : '100%',
-            transform: [
-              {
-                translateY: Animated.multiply(
-                  -1,
-                  Animated.subtract(
-                    _galleryAnim,
-                    Animated.multiply(
-                      64,
-                      Animated.divide(_galleryAnim, MAX_GALLERY_HEIGHT),
-                    ),
-                  ),
-                ),
-              },
-            ],
+            height: '100%',
           }}>
           <FlatList
             showsVerticalScrollIndicator={false}
@@ -442,12 +433,7 @@ const Conversation = ({route}: ConversationProps) => {
             {!isBlocked && (
               <React.Fragment>
                 <TouchableOpacity
-                  onPress={() =>
-                    navigate('StoryTaker', {
-                      sendToDirect: true,
-                      username: conversation.ownUser.username,
-                    })
-                  }
+                  onPress={_onUploadImage}
                   activeOpacity={0.8}
                   style={styles.btnCamera}>
                   <Image
@@ -539,7 +525,6 @@ const Conversation = ({route}: ConversationProps) => {
 };
 
 export default Conversation;
-const MAX_GALLERY_HEIGHT = SCREEN_WIDTH + 44;
 const EMOJI_SELECTION_BAR_WIDTH = 44 * 6 + 15;
 const styles = StyleSheet.create({
   container: {
@@ -647,17 +632,6 @@ const styles = StyleSheet.create({
     height: SCREEN_HEIGHT - STATUS_BAR_HEIGHT - 44,
     paddingBottom: 20,
   },
-  galleryWrapper: {
-    borderTopColor: '#ddd',
-    borderTopWidth: 0.5,
-    height: MAX_GALLERY_HEIGHT,
-    width: '100%',
-    position: 'absolute',
-    backgroundColor: '#000',
-    bottom: 0,
-    zIndex: 1,
-    left: 0,
-  },
   uploadingImageMask: {
     width: '100%',
     height: '100%',
@@ -694,14 +668,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 3.84,
     elevation: 5,
-  },
-  navigationGalleryBar: {
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    height: 44,
-    alignItems: 'center',
-    borderBottomColor: '#ddd',
-    borderBottomWidth: 1,
   },
   imageItem: {
     width: (SCREEN_WIDTH - 5) / 3,

@@ -30,7 +30,6 @@ const Direct = () => {
     })
     //Effect
     useEffect(() => {
-        console.log('Direct focused', focused)
         dispatch(TriggerMessageListenerRequest())
     }, [])
     useEffect(() => {

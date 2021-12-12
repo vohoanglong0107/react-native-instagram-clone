@@ -63,10 +63,13 @@ const Welcome = ({ navigation, route }: WelcomeProps) => {
     const _onRegister = async () => {
         if (usernameError) return;
         setLoading(true)
-        await dispatch(RegisterRequest({
+        let userData = {
             ...route.params,
             username,
-        }))
+        }
+        if (userData.phone && !userData.email) 
+            userData.email = userData.phone + '@gmail.com'
+        await dispatch(RegisterRequest(userData))
         setLoading(false)
 
     }

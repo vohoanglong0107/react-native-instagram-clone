@@ -3,16 +3,19 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Animated, Image, KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, TextInput, Alert } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { useDispatch } from 'react-redux'
-import { UpdateUserInfoRequest } from '../../../actions/userActions'
+import { launchImageLibrary } from 'react-native-image-picker'
+import ImagePicker from 'react-native-image-crop-picker';
+import { string } from 'yup'
+import { UpdateUserInfoRequest, UploadAvatarRequest } from '../../../actions/userActions'
 import MaterialInput from '../../../components/MaterialInput'
 import NavigationBar from '../../../components/NavigationBar'
 import { SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT, DEFAULT_PHOTO_URI } from '../../../constants'
-import { goBack } from '../../../navigations/rootNavigation'
+import { goBack, navigate } from '../../../navigations/rootNavigation'
 import { store } from '../../../store'
 import Radio from '../../../components/Radio'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { string } from 'yup'
 import { useSelector } from '../../../reducers'
+
 const EditProfile = () => {
     const dispatch = useDispatch()
     const preUser = store.getState().user.user.userInfo
@@ -40,18 +43,18 @@ const EditProfile = () => {
      */
     const [inputFor, setInputFor] = useState<1 | 2 | 3 | 4>(1)
 
-    useEffect(() => {
-        return () => {
-            _loadingDeg.stopAnimation()
-            setUpdating(false)
-        }
-    }, [])
-    useEffect(() => {
-        clearTimeout(ref.current.timeout)
-        ref.current.timeout = setTimeout(() => {
-            checkExistUsername(username, user?.username, setUsernameError)
-        }, 300);
-    }, [username])
+    // useEffect(() => {
+    //     return () => {
+    //         _loadingDeg.stopAnimation()
+    //         setUpdating(false)
+    //     }
+    // }, [])
+    // useEffect(() => {
+    //     clearTimeout(ref.current.timeout)
+    //     ref.current.timeout = setTimeout(() => {
+    //         checkExistUsername(username, user?.username, setUsernameError)
+    //     }, 300);
+    // }, [username])
     const _onAnimateMainContent = () => {
         Animated.timing(_topOffsetMainContent, {
             toValue: 0,
@@ -152,6 +155,22 @@ const EditProfile = () => {
         }))
         goBack()
     }
+    const _addProfilePhoto = async () => {
+        const res = await launchImageLibrary({
+            mediaType: 'photo',
+          });
+          if (res.didCancel) {
+            return;
+          } else {
+            res.assets!.forEach(async photo => {
+                const extension = photo
+                .fileName!.split('.')
+                .pop()
+                ?.toLocaleLowerCase();
+                await dispatch(UploadAvatarRequest(photo.uri!, extension as string))
+            });
+          }
+    }
     return (
         <SafeAreaView>
             <View style={styles.customNavigationBar}>
@@ -204,17 +223,14 @@ const EditProfile = () => {
                                 fontWeight: '600'
                             }}>Change Profile Photo</Text>
                         </View>
-                        {/* <TouchableOpacity
-                            onPress={() => navigate('GalleryChooser', { isChooseProfilePhoto: true })}
+                        <TouchableOpacity
+                            onPress={_addProfilePhoto}
                             activeOpacity={0.9}
                             style={styles.changePhotoOptionItem}>
                             <Text style={{
                                 fontSize: 16,
                             }}>New Profile Photo</Text>
-                        </TouchableOpacity> */}
-                        {/* await dispatch(UploadAvatarRequest(uri, extension as string))
-                        navigate('Account') */}
-                        {/* FIXME: add image picker and image crop picker*/}
+                        </TouchableOpacity>
 
                         {user?.avatarURL !== DEFAULT_PHOTO_URI &&
                             <TouchableOpacity

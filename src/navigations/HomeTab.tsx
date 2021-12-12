@@ -29,7 +29,6 @@ import AddSavedCollection from '../screens/Home/Account/Setting/Account/AddSaved
 import EditSavedCollection from '../screens/Home/Account/Setting/Account/EditSavedCollection'
 import AddToSavedCollection from '../screens/Home/Account/Setting/Account/AddToSavedCollection'
 import CreateHighlight from '../screens/Home/Account/CreateHighlight'
-import { useIsFocused } from '@react-navigation/native'
 export type HomeTabParamList = {
     Home: undefined,
     Explore: undefined,
@@ -131,11 +130,6 @@ const HomeStack = () => {
 }
 const Tab = createBottomTabNavigator<HomeTabParamList>()
 const HomeTab = () => {
-    const focused = useIsFocused()
-    useEffect(() => {
-        console.log('HomeTab is focused', focused)
-    }, [])
-
     return (
         <Tab.Navigator tabBar={TabBarComponent} screenOptions={{headerShown: false}} >
             <Tab.Screen
