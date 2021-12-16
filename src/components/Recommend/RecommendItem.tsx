@@ -1,25 +1,21 @@
 import React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
-import { Post } from '../../reducers/postReducer'
+import { StyleSheet, View, TouchableOpacity } from 'react-native'
 import { RecommendPost } from './RecommendPostList'
 import FastImage from 'react-native-fast-image'
 import { SCREEN_WIDTH } from '../../constants'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { navigate } from '../../navigations/rootNavigation'
-import { capitalizeFirstLetter } from '../../utils'
 export interface RecommendItemProps {
     item: RecommendPost,
     index: number,
-    showClassMask?: boolean
 }
 const ITEM_SIZE = (SCREEN_WIDTH - 6) / 3
-const RecommendItem = ({ item, index, showClassMask }: RecommendItemProps) => {
+const RecommendItem = ({ item, index }: RecommendItemProps) => {
     const _onViewPost = () => {
         navigate('PostDetail', {
             postId: item.uid
         })
     }
-    const sourceIndex = item.labels?.indexOf(item.className) || 0
     return (
         <TouchableOpacity
             style={{
@@ -33,7 +29,7 @@ const RecommendItem = ({ item, index, showClassMask }: RecommendItemProps) => {
             <FastImage
                 source={{
                     uri: item.source
-                        && item.source[sourceIndex].uri
+                        && item.source[0].uri
                 }}
                 style={{
                     width: ITEM_SIZE,
@@ -48,37 +44,6 @@ const RecommendItem = ({ item, index, showClassMask }: RecommendItemProps) => {
                 }}>
                     <Icon name="layers" size={24} color="#fff" />
                 </View>
-            }
-            {!!showClassMask &&
-                <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => navigate('ImageClass', {
-                        className: item.className
-                    })}
-                    style={{
-                        position: 'absolute',
-                        height: 44,
-                        borderTopRightRadius: 9999,
-                        backgroundColor: 'rgba(0,0,0,0.75)',
-                        bottom: -21,
-                        paddingRight: 15,
-                        left: 0,
-                        overflow: 'hidden',
-                    }}>
-                    <View style={{
-                        height: 22,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        paddingHorizontal: 15,
-                        paddingVertical: 2,
-                    }}>
-                        <Text style={{
-                            color: '#fff',
-                            fontWeight: '500'
-                        }}>{capitalizeFirstLetter(item.className)}</Text>
-                    </View>
-
-                </TouchableOpacity>
             }
         </TouchableOpacity >
     )

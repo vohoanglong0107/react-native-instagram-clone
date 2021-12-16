@@ -103,26 +103,26 @@ const FollowTab = ({ userX, type }: { userX: ProfileX, type: 1 | 2 }) => {
             initialRouteName={
                 type === 1 ? `${followerCount} Followers` : `${followingCount} Following`
             }
-            tabBarOptions={{
-                contentContainerStyle: {
+            screenOptions={{
+                tabBarContentContainerStyle:{
                     backgroundColor: 'rgb(250,250,250)',
                 },
-                indicatorStyle: {
+                tabBarIndicatorStyle: {
                     top: '100%',
                     backgroundColor: '#000',
                     height: 1
                 },
-                labelStyle: {
+                tabBarLabelStyle: {
                     fontWeight: '500',
                     fontSize: 14,
                     textTransform: 'capitalize'
                 },
-                tabStyle: {
-                    width: SCREEN_WIDTH / 3.5
+                tabBarStyle: {
+                    width: SCREEN_WIDTH
                 },
-                bounces: false,
-                scrollEnabled: true
-            }} >
+                tabBarBounces: false,
+                tabBarScrollEnabled: true,
+            }}>
             <Tab.Screen name={`${mutualCount} Mutual`}
                 children={() => <ProfileXMutual userX={userX} />} />
             <Tab.Screen name={`${followerCount} Followers`}

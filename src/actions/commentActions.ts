@@ -1,4 +1,4 @@
-import { firestore } from 'firebase';
+import firestore from '@react-native-firebase/firestore';
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { LIMIT_COMMENTS_PER_LOADING, CommentAction, CommentErrorAction, commentActionTypes, CommentExtraList, CommentList, CommentListWithScroll, CommentSuccessAction, ExtraComment } from '../reducers/commentReducer';
 import { UserInfo } from '../reducers/userReducer';
@@ -135,15 +135,6 @@ export const LoadMoreCommentListRequest = (postId: number):
                         if (loadedCommentIds.indexOf(x.data().uid) < 0
                             && collection.length < LIMIT_COMMENTS_PER_LOADING) {
                             const data: ExtraComment = { ...x.data() }
-                            // x.ref.collection('replies')
-                            //     .orderBy('create_at', 'asc').get().then(rq3 => {
-                            //         let replies = rq3.docs.map(x2 => {
-                            //             if (ownIds.indexOf(x2.data().userId) < 0)
-                            //                 ownIds.push(x2.data().userId)
-                            //             return x2.data()
-                            //         })
-                            //         data.replies = replies
-                            //     })
                             if (ownIds.indexOf(x.data().userId) < 0)
                                 ownIds.push(x.data().userId)
                             collection.push(data)

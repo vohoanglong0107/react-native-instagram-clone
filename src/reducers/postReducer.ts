@@ -1,9 +1,7 @@
 import { Alert } from 'react-native'
-import { firestore } from 'firebase'
+import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore'
 import { UserInfo } from './userReducer'
 import { Comment } from './commentReducer'
-import { ProcessedImage } from '../screens/Home/Account/GalleryChooser'
-import { MapBoxAddress } from '../utils'
 export const LIMIT_POSTS_PER_LOADING = 2
 export const postActionTypes = {
     FETCH_POST_LIST_REQUEST: 'FETCH_POST_LIST_REQUEST',
@@ -28,7 +26,6 @@ export type PostImage = {
     width: number,
     height: number,
     extension: string,
-    fullSize: boolean,
     tags: {
         x: number,
         y: number,
@@ -45,7 +42,7 @@ export type Post = {
     likes?: string[],
     commentList?: string[],
     permission?: number,
-    create_at?: firestore.Timestamp,
+    create_at?: FirebaseFirestoreTypes.Timestamp,
     source?: PostImage[],
     comments?: Comment[],
     tags?: string[],
@@ -53,7 +50,6 @@ export type Post = {
     tagUsername?: string[],
     notificationUsers?: string[],
     altText?: string,
-    address?: MapBoxAddress,
     hashtags?: string[]
 }
 export type ExtraPost = Post & {

@@ -1,4 +1,5 @@
-import { firestore } from 'firebase'
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
+
 import { DirectMessagesOptions, EmailandSMSNotificationsOptions, FollowingFollower, FromInstagramOptions, LiveIGTVOptions, PostStoryCommentOptions, PrivacyCommentOptions, PrivacyStoryOptions, PrivacyTagsOptions, SearchItem, StoryArchive, PostArchive, Highlight } from './userReducer'
 import { Post } from './postReducer'
 export const userXActionTypes = {
@@ -41,7 +42,7 @@ export interface ProfileX {
         },
         pauseAll?: {
             active: boolean,
-            from?: firestore.Timestamp,
+            from?: FirebaseFirestoreTypes.Timestamp,
             duration?: number
         },
         postStoryComment?: PostStoryCommentOptions,

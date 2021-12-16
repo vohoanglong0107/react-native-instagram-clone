@@ -12,7 +12,7 @@ import SuperImage from '../../../components/SuperImage'
 import { MONTH_ALIAS } from '../../../components/DatePicker'
 import { StoryArchive } from '../../../reducers/userReducer'
 import { RemoveHighlightRequest, EditHighlightRequest } from '../../../actions/userActions'
-import { firestore } from 'firebase'
+import firestore from '@react-native-firebase/firestore'
 import { StoryProcessedImage } from '../../Others/StoryProcessor'
 type EditHighlightRouteProp = RouteProp<SuperRootStackParamList, 'EditHighlight'>
 type EditHighlightProps = {

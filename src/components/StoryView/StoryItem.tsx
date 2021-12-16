@@ -1,4 +1,4 @@
-import { firestore } from 'firebase'
+import firestore from '@react-native-firebase/firestore';
 import React, { useEffect, useRef, useState } from 'react'
 import { Animated, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableHighlight, TouchableOpacity, View, Keyboard } from 'react-native'
 import FastImage from 'react-native-fast-image'

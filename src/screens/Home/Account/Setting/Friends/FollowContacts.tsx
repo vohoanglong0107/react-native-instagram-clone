@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Image, StyleSheet, Text, TouchableOpacity, View, Alert, Animated } from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, View, Animated } from 'react-native'
 import { navigation } from '../../../../../navigations/rootNavigation'
-import { PERMISSIONS, RESULTS, check, request } from 'react-native-permissions';
-import Contacts from 'react-native-contacts'
 import { useDispatch } from 'react-redux';
-import { FollowContactsRequest } from '../../../../../actions/userActions';
 const FollowContacts = (): JSX.Element => {
-    const dispatch = useDispatch()
     const [syncing, setSyncing] = useState<boolean>(false)
     const _loadingDeg = new Animated.Value(0)
     const _animateLoading = () => {
@@ -26,76 +22,7 @@ const FollowContacts = (): JSX.Element => {
             setSyncing(false)
         }
     }, [])
-    const _onSyncContactsHandler = () => {
-        check(PERMISSIONS.IOS.CONTACTS).then(result => {
-            switch (result) {
-                case RESULTS.UNAVAILABLE:
-                    Alert.alert("Error", `This service isn't availabel in your device!`)
-                    break;
-                case RESULTS.DENIED:
-                    request(PERMISSIONS.IOS.CONTACTS).then(result2 => {
-                        switch (result2) {
-                            case RESULTS.BLOCKED:
-                                Alert.alert("Error", `This service isn't availabel in your device!`)
-                                navigation.goBack()
-                                break;
-                            case RESULTS.DENIED:
-                                Alert.alert("Error", `This service isn't availabel in your device!`)
-                                navigation.goBack()
-                                break;
-                            case RESULTS.GRANTED:
-                                setSyncing(true)
-                                Contacts.getAllWithoutPhotos((err, contacts) => {
-                                    if (err) {
-                                        Alert.alert("Error", `This service isn't availabel in your device!`)
-                                    } else {
-                                        const phoneList: string[] = []
-                                        contacts.map(contact => {
-                                            contact.phoneNumbers.map(phone => {
-                                                phoneList.push(phone.number)
-                                            })
-                                        });
-                                        (async () => await dispatch(FollowContactsRequest(phoneList)))()
-                                            .then(() => {
-                                                setSyncing(false)
-                                                navigation.goBack()
-                                            })
-                                    }
-                                })
-                                break;
-                            default:
-                                break;
-                        }
-                    })
-                    break;
-                case RESULTS.GRANTED:
-                    setSyncing(true)
-                    Contacts.getAllWithoutPhotos((err, contacts) => {
-                        if (err) {
-                            Alert.alert("Error", `This service isn't availabel in your device!`)
-                        } else {
-                            const phoneList: string[] = []
-                            contacts.map(contact => {
-                                contact.phoneNumbers.map(phone => {
-                                    phoneList.push(phone.number)
-                                })
-                            });
-                            (async () => await dispatch(FollowContactsRequest(phoneList)))()
-                                .then(() => {
-                                    setSyncing(false)
-                                    navigation.goBack()
-                                })
-                        }
-                        // navigation.goBack()
-                    })
-                    break;
-                case RESULTS.BLOCKED:
-                    Alert.alert("Error", `This service isn't availabel in your device!`)
-                    navigation.goBack()
-                    break;
-            }
-        })
-    }
+    const _onSyncContactsHandler = () => {}
     return (
         <View style={styles.container}>
             {syncing &&

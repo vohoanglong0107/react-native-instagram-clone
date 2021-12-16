@@ -22,9 +22,7 @@ const PhotoShower = ({ sources, onChangePage }: PhotoShowerProps) => {
     const [showTags, setShowTags] = useState<boolean>(false)
     const myUsername = store.getState().user.user.userInfo?.username || ''
     const maxImageHeight = Math.max(...sources.map(img => {
-        if (img.fullSize) {
-            return SCREEN_WIDTH
-        } else return img.height * SCREEN_WIDTH / img.width
+        return img.height * SCREEN_WIDTH / img.width
     }))
     const [_animTags, _] = useState<Animated.Value[][]>(
         sources.map(source => {
@@ -115,21 +113,11 @@ const PhotoShower = ({ sources, onChangePage }: PhotoShowerProps) => {
                                 alignItems: 'center'
                             }}>
                             <View>
-                                {img.fullSize ? (
-                                    <FastImage
-                                        style={{
-                                            width: img.width < img.height ? img.width * SCREEN_WIDTH / img.height : SCREEN_WIDTH,
-                                            height: img.width > img.height ? img.height * SCREEN_WIDTH / img.width : SCREEN_WIDTH
-                                        }}
-                                        source={{ uri: img.uri }}
-                                    />
-                                ) : (
-                                        <ScaleImage
-                                            height={img.height * SCREEN_WIDTH / img.width}
-                                            width={SCREEN_WIDTH}
-                                            source={{ uri: img.uri }}
-                                        />
-                                    )}
+                                <ScaleImage
+                                    height={img.height * SCREEN_WIDTH / img.width}
+                                    width={SCREEN_WIDTH}
+                                    source={{ uri: img.uri }}
+                                />
                                 {showTags && img.tags.map((tag, index2) => (
                                     <Animated.View
                                         key={index2}

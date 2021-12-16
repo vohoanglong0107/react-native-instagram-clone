@@ -4,10 +4,10 @@ import React from 'react';
 import { ExtraPost } from '../reducers/postReducer';
 import { ProfileX } from '../reducers/profileXReducer';
 import { HashTag, UserInfo, Bookmark, Highlight } from '../reducers/userReducer';
+import Account from '../screens/Home/Account';
 import DiscoverPeople from '../screens/Home/Account/DiscoverPeople';
 import EditProfile from '../screens/Home/Account/EditProfile';
 import GalleryChooser, { ProcessedImage } from '../screens/Home/Account/GalleryChooser';
-import LocationChooser from '../screens/Home/Account/LocationChooser';
 import MuteOptions from '../screens/Home/Account/MuteOptions';
 import NotificationOptions from '../screens/Home/Account/NotificationOptions';
 import CloseFriends from '../screens/Home/Account/Setting/Privacy/CloseFriends';
@@ -15,7 +15,6 @@ import HideStoryFrom from '../screens/Home/Account/Setting/Privacy/HideStoryFrom
 import StoryPravicy from '../screens/Home/Account/Setting/Privacy/Story';
 import TagPeople from '../screens/Home/Account/TagPeople';
 import HashtagScreen from '../screens/Home/Explore/Hashtag';
-import LocationScreen from '../screens/Home/Explore/Location';
 import ProfileXScreen from '../screens/Home/Explore/ProfileX';
 import ProfileXFollow from '../screens/Home/Explore/ProfileXFollow';
 import PostDetail from '../screens/Home/PostDetail';
@@ -29,7 +28,6 @@ import StoryProcessor, { StoryProcessedImage } from '../screens/Others/StoryProc
 import StoryTaker, { StoryImageSpec } from '../screens/Others/StoryTaker';
 import Comment from '../screens/Root/Comment';
 import StoryFullView from '../screens/Root/StoryFullView';
-import { MapBoxAddress } from '../utils';
 import { navigationRef } from './rootNavigation';
 import RootTab from './RootTab';
 import Conversation from '../screens/Others/Direct/Conversation'
@@ -58,14 +56,10 @@ export type SuperRootStackParamList = {
         setPost?: React.Dispatch<React.SetStateAction<ExtraPost>>
     },
     EditProfile: undefined,
-    GalleryChooser: { isChooseProfilePhoto?: boolean },
+    GalleryChooser: undefined,
     TagPeople: {
         images: ProcessedImage[],
         onDone?: (images: ProcessedImage[]) => void
-    },
-    LocationChooser: {
-        address?: MapBoxAddress,
-        onDone?: (address: MapBoxAddress) => void
     },
     NotificationOptions: {
         user: UserInfo
@@ -89,7 +83,7 @@ export type SuperRootStackParamList = {
         hashtag: HashTag
     },
     ShareToDirect: {
-        item: MapBoxAddress | ExtraPost
+        item: ExtraPost
     },
     StoryPrivacy: undefined,
     CloseFriends: undefined,
@@ -114,7 +108,6 @@ export type SuperRootStackParamList = {
     },
     ProfileX: undefined,
     Hashtag: undefined,
-    Location: undefined,
     AccountIndex: undefined,
     ProfileXFollow: undefined,
     StoryTaker: {
@@ -209,9 +202,6 @@ const index = (): JSX.Element => {
                 }} name="TagPeople" component={TagPeople} />
                 <RootStack.Screen options={{
                     ...TransitionPresets.ModalTransition,
-                }} name="LocationChooser" component={LocationChooser} />
-                <RootStack.Screen options={{
-                    ...TransitionPresets.ModalTransition,
                     cardStyle: { backgroundColor: 'transparent' }
                 }} name="NotificationOptions" component={NotificationOptions} />
                 <RootStack.Screen options={{
@@ -260,9 +250,9 @@ const index = (): JSX.Element => {
                     gestureEnabled: true,
                     cardStyle: { backgroundColor: 'transparent' }
                 }} name="SuperImageFullView" component={SuperImageFullView} />
+                <RootStack.Screen name="AccountIndex" component={Account} />
                 <RootStack.Screen name="ProfileX" component={ProfileXScreen} />
                 <RootStack.Screen name="Hashtag" component={HashtagScreen} />
-                <RootStack.Screen name="Location" component={LocationScreen} />
                 <RootStack.Screen name="ProfileXFollow" component={ProfileXFollow} />
                 <RootStack.Screen component={DiscoverPeople} name="DiscoverPeople" />
                 <RootStack.Screen component={PostDetail} name="PostDetail" />

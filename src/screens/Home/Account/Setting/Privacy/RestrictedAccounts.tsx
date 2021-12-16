@@ -9,7 +9,7 @@ import { UserInfo } from '../../../../../reducers/userReducer'
 import { useDispatch } from 'react-redux'
 import { UpdatePrivacySettingsRequest } from '../../../../../actions/userActions'
 import { store } from '../../../../../store'
-import { firestore } from 'firebase'
+import firestore from '@react-native-firebase/firestore'
 import { getTabBarHeight } from '../../../../../components/BottomTabBar'
 import { findUsersByName } from '../../../../../utils'
 const RestrictedAccounts = (): JSX.Element => {

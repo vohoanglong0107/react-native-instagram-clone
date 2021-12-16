@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
     StyleSheet, Text, View,
     TouchableOpacity, Image, TextInput,
-    KeyboardAvoidingView, Keyboard,
+    KeyboardAvoidingView,
     Animated,
     ScrollView,
     SafeAreaView
 } from 'react-native'
 import { SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT } from '../../constants'
-import { Formik, FormikProps, FormikValues, FormikHelpers } from 'formik'
+import { Formik, FormikProps } from 'formik'
 import * as yup from 'yup'
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Easing } from 'react-native'
 import { navigation } from '../../navigations/rootNavigation'
 import DatePicker, { MONTH_ALIAS } from '../../components/DatePicker'
@@ -45,11 +44,9 @@ const Register = () => {
         year: 2020
     })
     const [step, setStep] = useState<number>(1)
-    const [validating, setValidating] = useState<boolean>(false)
     const [currentTab, setCurrentTab] = useState<number>(1)
     const _onToggleTab = (type: number): void => setCurrentTab(type)
-    const _onPressNextStep = (): void => {
-    }
+
     const _onValidatedStep1 = (values: RegisterFormValuesStep1) => {
         setStep(step + 1)
         setEmail(values.email)

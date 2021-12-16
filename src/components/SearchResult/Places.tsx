@@ -2,12 +2,11 @@ import React from 'react'
 import { StyleSheet, Text, View, FlatList } from 'react-native'
 import { MixedProfileX } from '../../screens/Home/Explore/FollowTab/ProfileXMutual'
 import { HashTag } from '../../reducers/userReducer'
-import { MapBoxAddress } from '../../utils'
 import { ResultItem, listStyle } from './TopResult'
 
 export interface PlacesProps {
-    resultData: (MixedProfileX | HashTag | MapBoxAddress)[],
-    recentList: (MixedProfileX | HashTag | MapBoxAddress)[],
+    resultData: (MixedProfileX | HashTag)[],
+    recentList: (MixedProfileX | HashTag)[],
     searching?: boolean
 }
 const Places = ({ resultData, recentList, searching }: PlacesProps) => {

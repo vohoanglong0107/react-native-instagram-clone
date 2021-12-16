@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/native';
 
 export const navigationRef:
-    React.RefObject<NavigationContainerRef> = React.createRef();
+    React.RefObject<NavigationContainerRef<any>> = React.createRef();
 // export const navigation = navigationRef.current
 export function navigate(name: string, params?: object): void {
     navigationRef.current?.navigate(name, params);

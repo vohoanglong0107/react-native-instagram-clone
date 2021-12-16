@@ -8,7 +8,6 @@ import { SCREEN_WIDTH } from '../../constants'
 import { navigate } from '../../navigations/rootNavigation'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import PostMessage from './PostMessage'
-import LocationMessage from './LocationMessage'
 import SuperImage from '../SuperImage'
 
 interface MessageItemProps {
@@ -58,13 +57,6 @@ const MessageItem = ({ item, index, owner, showMsgEmojiSelection }: MessageItemP
                     superId: item.superImageId
                 })
                 break;
-            case messagesTypes.ADDRESS:
-                navigate('Location', {
-                    address: {
-                        id: item.address_id
-                    }
-                })
-                break
             case messagesTypes.IMAGE:
                 _imageRef.current?.measure((x, y, w, h, pX, pY) => {
                     navigate('ImageFullView', {
@@ -95,9 +87,6 @@ const MessageItem = ({ item, index, owner, showMsgEmojiSelection }: MessageItemP
         case messagesTypes.SUPER_IMAGE:
             extraStyle = styles.superImageMessage
             break;
-        case messagesTypes.ADDRESS:
-            extraStyle = styles.addressMessage
-            break
         case messagesTypes.IMAGE:
             extraStyle = styles.imageMessage
             break
@@ -188,9 +177,6 @@ const MessageItem = ({ item, index, owner, showMsgEmojiSelection }: MessageItemP
                             <Text style={styles.msgText}>{item.text}</Text>
                         </View>
                     </React.Fragment>
-                }
-                {item.type === messagesTypes.ADDRESS &&
-                    <LocationMessage address_id={item.address_id as string} />
                 }
                 {item.type === messagesTypes.POST &&
                     <PostMessage

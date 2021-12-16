@@ -10,7 +10,7 @@ import { SCREEN_WIDTH } from '../../constants'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import FastImage from 'react-native-fast-image'
 import { useSelector } from '../../reducers'
-import { firestore } from 'firebase'
+import firestore from '@react-native-firebase/firestore'
 import { Comment } from '../../reducers/commentReducer'
 import { ProfileX } from '../../reducers/profileXReducer'
 import { Story, storyPermissions } from '../../reducers/storyReducer'
@@ -33,7 +33,11 @@ const PreUploadSuperImage = ({ route }: PreUploadSuperImageProps) => {
         fetchSuggestionList()
     }, [])
     const _onShareToStory = async (type: number) => {
-        const superImagesList = await Promise.all(uploadSuperImages(images))
+        const superImagesList = await Promise.all(uploadSuperImages(images.map(img => ({
+            ...img,
+            texts: img.texts.map(({animRatio, animX, animY, ...rest}) => rest),
+            labels: img.labels.map(({animRatio, animX, animY, ...rest}) => rest)
+        }))),)
         const storyImages: Story[] = superImagesList.map(source => ({
             permission: type,
             create_at: Timestamp(),
@@ -43,7 +47,6 @@ const PreUploadSuperImage = ({ route }: PreUploadSuperImageProps) => {
             messagesList: [],
             reactions: [],
             hashtags: source.hashtags,
-            address: source.address,
             mention: source.mention
         }))
         dispatch(PostStoryRequest(storyImages))

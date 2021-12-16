@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
-import { firestore } from 'firebase'
+import firestore from '@react-native-firebase/firestore'
 import React, { useEffect, useRef, useState } from 'react'
 import { Alert, AlertButton, Animated, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -63,10 +63,13 @@ const Welcome = ({ navigation, route }: WelcomeProps) => {
     const _onRegister = async () => {
         if (usernameError) return;
         setLoading(true)
-        await dispatch(RegisterRequest({
+        let userData = {
             ...route.params,
             username,
-        }))
+        }
+        if (userData.phone && !userData.email) 
+            userData.email = userData.phone + '@gmail.com'
+        await dispatch(RegisterRequest(userData))
         setLoading(false)
 
     }

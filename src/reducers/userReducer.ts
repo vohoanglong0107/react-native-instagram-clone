@@ -1,8 +1,9 @@
-import { firestore } from 'firebase'
+import { FirebaseAuthTypes } from '@react-native-firebase/auth'
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
+
 import { Alert } from 'react-native'
 import { Post, PostImage } from './postReducer'
 import { Story } from './storyReducer'
-import { MapBoxAddress } from '../utils'
 export const userActionTypes = {
     LOGIN_REQUEST: 'LOGIN_REQUEST',
     LOGIN_SUCCESS: 'LOGIN_SUCCESS',
@@ -58,7 +59,6 @@ export const userActionTypes = {
 export type SearchItem = {
     type?: 1 | 2 | 3,
     username?: string,
-    address?: string,
     hashtag?: string
 }
 export type HashTag = {
@@ -164,7 +164,7 @@ export type NotificationSetting = {
     },
     pauseAll?: {
         active: boolean,
-        from?: firestore.Timestamp,
+        from?: FirebaseFirestoreTypes.Timestamp,
         duration?: number
     },
     postStoryComment?: PostStoryCommentOptions,
@@ -259,7 +259,7 @@ export type Highlight = {
 export type userPayload = {
     user: {
         logined?: boolean,
-        firebaseUser?: firebase.UserInfo,
+        firebaseUser?: FirebaseAuthTypes.User,
         userInfo?: UserInfo
     },
     bookmarks?: BookmarkCollection[],

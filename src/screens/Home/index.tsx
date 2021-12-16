@@ -4,7 +4,6 @@ import {
     NativeSyntheticEvent, RefreshControl,
     SafeAreaView, ScrollView, StyleSheet,
     Text, View, KeyboardAvoidingView, Keyboard, TextInput,
-    TouchableOpacity
 } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { FetchPostListRequest, LoadMorePostListRequest } from '../../actions/postActions'
@@ -15,7 +14,6 @@ import StoryPreviewList from '../../components/StoryPreviewList'
 import { SCREEN_HEIGHT, STATUS_BAR_HEIGHT } from '../../constants'
 import CommentInputPopup from '../../components/CommentInputPopup'
 import { useSelector } from '../../reducers'
-import { getTabBarHeight } from '../../components/BottomTabBar'
 const index = () => {
     const dispatch = useDispatch()
     const postList = useSelector(state => state.postList)

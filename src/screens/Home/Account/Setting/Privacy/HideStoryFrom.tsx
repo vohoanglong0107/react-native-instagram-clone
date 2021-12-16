@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux'
 import { store } from '../../../../../store'
 import { useSelector } from '../../../../../reducers'
 import { UserInfo } from '../../../../../reducers/userReducer'
-import { firestore } from 'firebase'
+import firestore from '@react-native-firebase/firestore'
 import { UpdatePrivacySettingsRequest } from '../../../../../actions/userActions'
 import { findUsersByName } from '../../../../../utils'
 const HideStoryFrom = (): JSX.Element => {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Animated, Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Animated, Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useDispatch } from 'react-redux'
 import { ThunkDispatch } from 'redux-thunk'
@@ -7,7 +7,7 @@ import { LoginRequest, userLoginWithEmail } from '../../actions/userActions'
 import { SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT } from '../../constants'
 import { navigation } from '../../navigations/rootNavigation'
 import * as yup from 'yup'
-import { firestore, auth } from 'firebase'
+import firestore from '@react-native-firebase/firestore'
 import { userAction } from '../../reducers/userReducer'
 const Login = (): JSX.Element => {
     const dispatch = useDispatch()
@@ -314,19 +314,27 @@ function getEventHandlers(
         setLoading(true)
         let email = ''
         await yup.string().required().email().validate(username).then(async re => {
-            email = username
+            email = username;
         }).catch(async err => {
             const result = await firestore().collection('users')
                 .where('username', '==', username).get()
             if (result.docs.length > 0) {
                 email = result.docs[0].data().email
             }
+            else {
+                email = username + '@gmail.com'
+            }
         })
         const loginData: userLoginWithEmail = {
             email: email,
             password,
         }
-        await dispatch(LoginRequest(loginData))
+        if (email !== '') {
+            await dispatch(LoginRequest(loginData))
+        }
+        else {
+            Alert.alert('Error', 'Username is invalid')
+        }
         setLoading(false)
     }
     return {

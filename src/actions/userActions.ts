@@ -1,11 +1,13 @@
-import { auth, firestore, storage } from 'firebase';
+import auth from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
+import storage from "@react-native-firebase/storage";
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { DEFAULT_PHOTO_URI } from '../constants';
 import { navigate } from "../navigations/rootNavigation";
 import { defaultUserState, ErrorAction, ExtraInfoPayload, NotificationProperties, NotificationSetting, PostStoryCommentOptions, PrivacyCommentOptions, PrivacyProperties, PrivacySetting, SuccessAction, userAction, userActionTypes, UserInfo, userPayload, UserSetting, HashTag, SearchItem, BookmarkCollection, Bookmark, StoryArchive, PostArchive, Highlight } from '../reducers/userReducer';
 import { WelcomePropsRouteParams } from '../screens/Auth/Welcome';
 import { store } from '../store';
-import { generateUsernameKeywords, uriToBlob, Timestamp } from '../utils';
+import { generateUsernameKeywords, Timestamp } from '../utils';
 import { Alert } from 'react-native';
 import { CreateNotificationRequest } from './notificationActions';
 import { notificationTypes } from '../reducers/notificationReducer';
@@ -547,7 +549,6 @@ export const UpdateNotificationSettingsRequest = (setting: NotificationSetting):
     return async (dispatch: ThunkDispatch<{}, {}, userAction>) => {
         try {
             if (Object.keys(setting).length === 0) throw new Error;
-            const targetSetting = Object.keys(setting)[0]
             let me: UserInfo = { ...store.getState().user.user.userInfo }
             const ref = firestore()
             const rq = await ref.collection('users').doc(me.username).get()
@@ -573,8 +574,6 @@ export const UpdateNotificationSettingsRequest = (setting: NotificationSetting):
                     ...setting
                 }
             })
-            const rq2 = await targetUser.get()
-            const result: TempIntersection = rq.data() || {}
             dispatch(UpdateNotificationSettingSuccess({
                 ...(user.notificationSetting || {}),
                 ...setting
@@ -632,8 +631,6 @@ export const UpdatePrivacySettingsRequest = (setting: PrivacySetting):
                     ...setting
                 }
             })
-            const rq2 = await targetUser.get()
-            const result: TempIntersection = rq.data() || {}
             dispatch(UpdatePrivacySettingSuccess({
                 ...(user.privacySetting || {}),
                 ...setting
@@ -665,13 +662,10 @@ export const UploadAvatarRequest = (uri: string, extension: string):
     return async (dispatch: ThunkDispatch<{}, {}, userAction>) => {
         try {
             const me = store.getState().user.user.userInfo
-            const blob = await uriToBlob(uri)
-            const result = await storage().ref()
-                .child(`avatar/${me?.username}.${extension}`)
-                .put(blob as Blob, {
-                    contentType: `image/${extension}`
-                })
-            const downloadUri = await result.ref.getDownloadURL()
+            const result = await storage().ref('avatar')
+                .child(`${me?.username}.${extension}`)
+                .putFile(uri)
+            const downloadUri = await storage().ref(result.metadata.fullPath).getDownloadURL()
             dispatch(UpdateUserInfoRequest({
                 avatarURL: downloadUri
             }))
@@ -864,8 +858,6 @@ export const PushRecentSearchRequest = (searchItem: SearchItem):
                     && item.type === 1)
                     || (item.hashtag === searchItem.hashtag && searchItem.type === 2
                         && item.type === 2)
-                    || (item.address === searchItem.address && searchItem.type === 3
-                        && item.type === 3)
                 ) {
                     recentSearchList.splice(index, 1)
                     recentSearchList.push(searchItem)
@@ -901,8 +893,6 @@ export const RemoveRecentSearchRequest = (searchItem: SearchItem):
                     && item.type === 1)
                     || (item.hashtag === searchItem.hashtag && searchItem.type === 2
                         && item.type === 2)
-                    || (item.address === searchItem.address && searchItem.type === 3
-                        && item.type === 3)
                 ) {
                     recentSearchList.splice(index, 1)
                     return false

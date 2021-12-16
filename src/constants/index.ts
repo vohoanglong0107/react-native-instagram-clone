@@ -1,91 +1,10 @@
-import '@firebase/auth';
-import '@firebase/firestore';
 // import firestore from '@react-native-firebase/firestore'
-import * as firebase from 'firebase';
 import { Dimensions } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import SettingComponents from '../screens/Home/Account/Setting';
-import { defaultUserState } from '../reducers/userReducer';
-import { convertToFirebaseDatabasePathName } from '../utils';
-//Define API ClASSIFY
 export const APP_NAME = 'Instagram'
-export const CLASSIFY_API = 'http://192.168.1.2:5555/classify'
-const firebaseConfig = {
-    apiKey: "AIzaSyATgIePHiOXnqlzUN4rRyyaPw4CTWH7yWA",
-    authDomain: "vucms-7f6fa.firebaseapp.com",
-    databaseURL: "https://vucms-7f6fa.firebaseio.com",
-    projectId: "vucms-7f6fa",
-    storageBucket: "vucms-7f6fa.appspot.com",
-    messagingSenderId: "62284682844",
-    appId: "1:62284682844:web:ef8af00934e5fa64dbf899"
-};
-firebase.initializeApp(firebaseConfig)
-// firebase.firestore().collectionGroup('comments')
-//     .where('userId', '==', 'vucms').get().then(x => console.warn(x.docs[0].data()))
-// Refresh stories expired
-// firebase.firestore().collection('stories').get().then(docs => {
-//     docs.forEach(doc => {
-//         doc.ref.update({
-//             create_at: new Date(),
-//             seenList: [ 'vucms.user3', 'vucms.user4', 'vucms.user5', 'vucms.user8']
-//         })
-//     })
-// })
-//Add default Setting
-// firebase.firestore().collection('users').get().then(docs => {
-//     docs.forEach(doc => {
-// if (doc.data().username !== 'vucms') {
-// firebase.database().ref('/online/' + convertToFirebaseDatabasePathName(doc.data().username)).set({
-//     status: [0, 1][Math.floor(Math.random() * 2)],
-//     last_online: new Date().getTime()
-// })
-// doc.ref.update({
-//     notificationSetting: defaultUserState.setting?.notification,
-//     privacySetting: defaultUserState.setting?.privacy,
-// })
-//         }
-//     })
-// })
-//Add online status
-
-//Add Keyword
-// firebase.firestore().collection('users').get().then(x => {
-//     x.docs.map(d => {
-//         d.ref.update({
-//             keyword: generateUsernameKeywords(d.data().username)
-//         })
-//     })
-// })
-export const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoidnVjbXMwMjAyIiwiYSI6ImNrYzd3YXN5YjB0bzQyeWxqaHk3cndkZWUifQ.Rrt9iMYACnqGK-rCblD0Ag'
-const sources = [
-    'https://www.statnews.com/wp-content/uploads/2019/05/GettyImages-484960237-645x645.jpg',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSAFHzgUiwqYL_SoXWfUYVC8iDOEKyvNSQZHZMXIM81SuH64_3E&usqp=CAU',
-    'https://r-cf.bstatic.com/images/hotel/max1024x768/206/206081932.jpg',
-    'https://media-cdn.tripadvisor.com/media/photo-s/0a/67/34/d3/peaceful-place-in-phan.jpg',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT3nz_ua7NkXgQBbfNE4okGZJgf_WZ79pRozAWra0LJ76r3VSxx&usqp=CAU',
-    'https://www.baodanang.vn/dataimages/201904/original/images1508152_Hinh_1.jpg',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQt_QacIEhOwHXBKrETxPYVP796OZyZPKgdVWlplbxz29BRB6OG&usqp=CAU',
-    'https://cdn.tinybuddha.com/wp-content/uploads/2010/03/Peaceful.png',
-    'https://pix10.agoda.net/hotelImages/545437/-1/3e3de077901fd04bcbf4ba1435bb9e37.jpg?s=1024x768',
-    'https://images.pexels.com/photos/1666021/pexels-photo-1666021.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
-]
 export const DEFAULT_PHOTO_URI = 'https://www.pavilionweb.com/wp-content/uploads/2017/03/man-300x300.png'
-// setInterval(() => {
-//     const uid = new Date().getTime()
-//     const ref = firebase.firestore()
-//     ref.collection('posts').doc(`${uid}`).set({
-//         uid,
-//         userId: 'vucms',
-//         source: [
-//             sources[Math.floor(Math.random() * sources.length)]
-//         ],
-//         content: "Hi, I'm @vucms, a react native developer",
-//         create_at: new Date(),
-//         likes: ['vucms', 'vucms0202'],
-//         isVideo: false,
-//         permission: 1
-//     })
-// }, 1000)
+export const FIREBASE_DATABASE_URL = 'https://mobile-final-ed685-default-rtdb.asia-southeast1.firebasedatabase.app/'
 export const STATUS_BAR_HEIGHT: number = getStatusBarHeight()
 export const SCREEN_HEIGHT: number = Math.round(Dimensions.get('window').height)
 export const SCREEN_WIDTH: number = Math.round(Dimensions.get('window').width)
