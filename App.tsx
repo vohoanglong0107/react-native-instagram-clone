@@ -16,6 +16,7 @@
  import { persistor, store } from './src/store';
  import { convertToFirebaseDatabasePathName } from './src/utils';
  import { firebase } from '@react-native-firebase/database';
+ import { FIREBASE_DATABASE_URL } from './src/constants';
 
 const App = () => {
   const myUsername = store.getState().user.user?.userInfo?.username
@@ -28,7 +29,7 @@ const App = () => {
 			// limit functions quota
 			ref.current.itv = setInterval(() => {
 				if (AppState.currentState === 'active') {
-					firebase.app().database('https://mobile-final-ed685-default-rtdb.asia-southeast1.firebasedatabase.app/').ref(`/online/${convertToFirebaseDatabasePathName(myUsername)}`)
+					firebase.app().database(FIREBASE_DATABASE_URL).ref(`/online/${convertToFirebaseDatabasePathName(myUsername)}`)
 						.update({
 							last_online: new Date().getTime(),
 							status: 1

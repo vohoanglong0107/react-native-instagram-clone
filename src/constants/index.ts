@@ -4,6 +4,7 @@ import { getStatusBarHeight } from 'react-native-status-bar-height';
 import SettingComponents from '../screens/Home/Account/Setting';
 export const APP_NAME = 'Instagram'
 export const DEFAULT_PHOTO_URI = 'https://www.pavilionweb.com/wp-content/uploads/2017/03/man-300x300.png'
+export const FIREBASE_DATABASE_URL = 'https://mobile-final-ed685-default-rtdb.asia-southeast1.firebasedatabase.app/'
 export const STATUS_BAR_HEIGHT: number = getStatusBarHeight()
 export const SCREEN_HEIGHT: number = Math.round(Dimensions.get('window').height)
 export const SCREEN_WIDTH: number = Math.round(Dimensions.get('window').width)

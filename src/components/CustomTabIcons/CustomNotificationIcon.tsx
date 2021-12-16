@@ -6,6 +6,7 @@ import {useDispatch} from 'react-redux';
 import {FetchNotificationListRequest} from '../../actions/notificationActions';
 import {store} from '../../store';
 import {convertToFirebaseDatabasePathName} from '../../utils';
+import {FIREBASE_DATABASE_URL} from '../../constants';
 export interface CustomNotificationIconProps {
   focused: boolean;
 }
@@ -18,12 +19,8 @@ const CustomNotificationIcon = ({focused}: CustomNotificationIconProps) => {
     const myUsernamePath = convertToFirebaseDatabasePathName(myUsername!);
     firebase
       .app()
-      .database(
-        'https://mobile-final-ed685-default-rtdb.asia-southeast1.firebasedatabase.app/',
-      )
-      .ref(
-        '/notifications/' + myUsernamePath,
-      )
+      .database(FIREBASE_DATABASE_URL)
+      .ref('/notifications/' + myUsernamePath)
       .on('value', rs => {
         const shouldRefreshNotifications = rs.val();
         if (shouldRefreshNotifications) {
@@ -31,9 +28,7 @@ const CustomNotificationIcon = ({focused}: CustomNotificationIconProps) => {
 
           firebase
             .app()
-            .database(
-              'https://mobile-final-ed685-default-rtdb.asia-southeast1.firebasedatabase.app/',
-            )
+            .database(FIREBASE_DATABASE_URL)
             .ref('/notifications/' + myUsernamePath)
             .set(false);
           dispatch(FetchNotificationListRequest());
